@@ -1,0 +1,67 @@
+\documentclass[12pt]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{mathpazo} % math & rm
+% \linespread{1.05}        % Palatino needs more leading (space between lines)
+\usepackage[scaled]{helvet} % ss
+\usepackage{courier} % tt
+\normalfont
+\usepackage[T1]{fontenc}
+
+\usepackage{amsthm,amssymb,amsbsy,amsmath,amsfonts,amssymb,amscd}
+\usepackage{dsfont}
+\usepackage{tasks}
+\usepackage{enumitem}
+\usepackage[top=2cm, bottom=3cm, left=3cm , right=3cm]{geometry}
+\usepackage{tikz}
+\usepackage[hidelinks]{hyperref}
+\usepackage{ulem}
+
+\usetikzlibrary{automata,arrows,positioning,calc}
+
+
+\begin{document}
+\begin{center}
+	\rule{\textwidth}{1pt}
+	\\ \ \\
+	{\LARGE \textbf{Lab 3 -- Gaussian Process Regression}}\\
+	\vspace{3mm}
+	{\large Short course on Statistical modelling for optimization\\ \vspace{3mm}}
+	{\normalsize N. Durrande - J.C. Croix, Universidad Tecnol\'ogica de Pereira, 2017}\\
+	\vspace{3mm}
+	\rule{\textwidth}{1pt}
+	\vspace{5mm}
+\end{center}
+The aim of this lab session is to obtain the best possible GPR model for the data that has been obtained with the catapult simulator.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{GPR with GPy}
+GPy is a python package for Gaussian process models. If you have not already installed it on your computer, we advise that you download the developers version on github \url{https://github.com/SheffieldML/GPy/tree/devel} and follow the instructions.% (there is a link ``Download ZIP'' on the right). The installation steps are: 1. unzip the file; 2. Open a terminal (for example the Anaconda terminal) and go to the unzipped folder; 3. Run the command \texttt{python setup.py install}. You should then be able to import the GPy library.
+
+% \subsection*{Questions}
+\paragraph{Q1.} Import the data (design of experiments and outputs from the simulator) you have generated.
+
+\paragraph{Q2.}
+The code for creating and optimizing a basic GP model is already given in the python script. Read it carefully to understand each line signification.
+
+\paragraph{Q3.}
+Compute the IMSE associated to the model based on a test set of 1000 points. What do you think about the model accuracy?
+
+\paragraph{Q4.}
+Plot the leave-one-out predictions against the actual observations. What do you think about the model accuracy?
+
+\paragraph{Q5.}
+Implement a function that returns the $Q^2$ criterion and compute its value on the LOO predictions. What component of the model are we testing here?
+
+\paragraph{Q6.}
+Compute the standardized LOO residuals and that compare them to the $\mathcal{N}(0,1)$ distribution. What does this test allows us to asses?
+
+\paragraph{Q7.} Try various models and select the best one. When building the models, you may consider changing:
+\begin{itemize}
+   	\item the kernel (try various ones and sums of kernels)
+   	\item the way kernel parameters are estimated (optimization staring point, boundaries, ...)
+   	\item possible rotations of the input space
+\end{itemize}
+
+\end{document}
