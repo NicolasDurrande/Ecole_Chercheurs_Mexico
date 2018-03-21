@@ -41,14 +41,14 @@ Se référer au document \texttt{volcan\_test\_case.pdf}.
 Les objectifs de cette section sont 1- d'observer différentes caractéristiques de plans d'expériences et 2- de générer un premier jeu de données pour le cas-test qui servira dans les TPs suivants.
 
 \paragraph{Q1.} Ecrire une fonction qui implémente un plan d'expériences uniforme (à l'aide des fonctions \R \texttt{runif}, \texttt{matrix}). 
-Cette fonction doit prendre en paramètres le nombre de points $n$ et le nombre de paramètres $d$, et retourner une matrice $n \times d$ de valeurs entre 0 et 1.
+Cette fonction doit prendre en paramètres le nombre de points $n$ et le nombre de variables $d$, et retourner une matrice $n \times d$ de valeurs entre 0 et 1. Générer un plan à 100 points en dimension 5. Visualiser.
 
-\paragraph{Q2.} Ecrire une fonction qui implémente un hypercube latin (aléatoire) : on pourra utiliser la fonction \texttt{sample}. Attention à la normalisation.
-Cette question peut être sautée par les stagiaires souhaitant directement explorer le cas-test.
+\paragraph{Q2.} Ecrire une fonction qui implémente un hypercube latin (aléatoire) : on pourra utiliser la fonction \texttt{sample}. Cette fonction utilisera les mêmes entrées / sorties que la précédente.
+Attention à la normalisation. Cette question peut être sautée par les stagiaires souhaitant directement explorer le cas-test. Générer un plan à 100 points en dimension 5. Visualiser.
 
-\paragraph{Q3.} A l'aide du paquet \texttt{DiceDesign}, générer un hypercube latin optimisé à 100 points, par exemple avec la fonction \texttt{maximinESE\_LHS}, ou bien avec le paquet \texttt{lhs} et la fonction \texttt{improvedLHS}.
+\paragraph{Q3.} A l'aide du paquet \texttt{DiceDesign}, générer un hypercube latin optimisé à 100 points et 5 variables, par exemple avec la fonction \texttt{maximinESE\_LHS}, ou bien avec le paquet \texttt{lhs} et la fonction \texttt{improvedLHS}.
 
-\paragraph{Q4.} A l'aide du paquet \texttt{DiceDesign}, générer 100 points d'une suite à faible discrépance à l'aide de \texttt{runif.faure}.
+\paragraph{Q4.} A l'aide du paquet \texttt{DiceDesign}, générer 100 points d'une suite à faible discrépance en dimension $d=5$ à l'aide de \texttt{runif.faure}.
 
 \paragraph{Q5.} Comparer les 4 plans d'expériences générés. 
 On pourra regarder les répartitions sur les marginales d'ordre 1 à l'aide d'histogrammes (\texttt{hist}) ou de graphes en bâton (\texttt{plot(seqce,rep(1,N),type="h")}), 
