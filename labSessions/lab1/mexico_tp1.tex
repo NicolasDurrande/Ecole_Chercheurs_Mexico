@@ -40,7 +40,8 @@ Se référer au document \texttt{volcan\_test\_case.pdf}.
 
 Les objectifs de cette section sont 1- d'observer différentes caractéristiques de plans d'expériences et 2- de générer un premier jeu de données pour le cas-test qui servira dans les TPs suivants.
 
-\paragraph{Q1.} Ecrire une fonction qui implémente un plan d'expériences uniforme (à l'aide des fonctions \R \texttt{runif}, \texttt{matrix}). 
+\paragraph{Q1.} Ecrire une fonction qui implémente un plan d'expériences
+uniforme (à l'aide des fonctions \R \ \texttt{runif}, \texttt{matrix}). 
 Cette fonction doit prendre en paramètres le nombre de points $n$ et le nombre de variables $d$, et retourner une matrice $n \times d$ de valeurs entre 0 et 1. Générer un plan à 100 points en dimension 5. Visualiser.
 
 \paragraph{Q2.} Ecrire une fonction qui implémente un hypercube latin (aléatoire) : on pourra utiliser la fonction \texttt{sample}. Cette fonction utilisera les mêmes entrées / sorties que la précédente.
@@ -57,6 +58,7 @@ les répartitions sur les espaces bi-dimensionnels (fonction \texttt{pairs}) et 
 \paragraph{Q6.} Choisir un des plans et effectuer les appels au modèle de volcan correspondant. A noter : on a uniquement besoin d'utiliser la fonction \texttt{compute\_wls}, qui accepte en entrée un vecteur ou une matrice.
 
 \paragraph{Q7.} Etudier les données générées. On pourra regarder en particulier comment la sortie du modèle varie en fonction de chaque paramètre d'entrée. 
-Pour un plan d'expériences \texttt{X} et un vecteur de réponse \texttt{Y} : \texttt{plot(X[,1], Y}, etc.
+Pour un plan d'expériences \texttt{X} et un vecteur de réponse \texttt{Y} :
+\texttt{plot(X[,1], Y)}, etc.
 
 \end{document}
