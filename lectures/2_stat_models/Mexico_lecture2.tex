@@ -13,7 +13,7 @@
 %\author[Pereira, June 2017]{June 2017 -- Universidad Tecnol\'ogica de Pereira -- Colombia}
 \title[\'Ecole chercheurs MEXICO]{ \small \'Ecole chercheurs MEXICO, La Rochelle, Mars 2018\\ \vspace{3mm} \LARGE Introduction to statistical modelling}
 \author[\quad La Rochelle, March 2018]{Nicolas Durrande, nicolas@prowler.io}
-\institute[]{PROWLER.io, Cambridge (UK) -- Mines St-\'Etienne (France)}
+\institute[]{PROWLER.io, Cambridge -- Mines St-\'Etienne}
 \date{\null}
 
 \DeclareMathOperator*{\Var}{var}
@@ -48,20 +48,20 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
-Why \textbf{statistical models}? \\We want to be able to quantify the model error:
+How to build \textbf{statistical models}? 
 \begin{center}
 \includegraphics[height=5cm]{figures/ink_mconfint}
 \end{center}
-The confidence intervals can be used to obtain a \textbf{measure of uncertainty on the value of interest}.
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
 In the sequel, we will use the following notations : 
 \begin{itemize}
-	\item The set of observation points will be represented by a $n \times d$ matrix $X=(X_1, ..., X_n)^t$
-	\item The vector of observations will be denoted by $F$ : $F_i=f(X_i)$ (or $F=f(X)$).
+	\item The set of observation points is a $n \times d$ matrix $X$
+	\item The vector of observations is $F$ : $F_i=f(X_i)$ (or $F=f(X)$).
 \end{itemize}
+\vspace{5mm}
 We will now discuss two types of statistical models:
 \begin{itemize}
 	\item Linear regression
@@ -122,12 +122,9 @@ Can this error be quantified?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
-The initial assumption is $ F = B(X) \beta  + \varepsilon$ and we have computed an estimator of $\beta$:
-$$\hat{\beta} = (B(X)^t B(X))^{-1} B(X)^t F.$$
-$\hat{\beta}$ can thus be seen as a sample from the random variable:
+The estimator can also be seen as a random variable: 
 $$\hat{\beta} = (B(X)^t B(X))^{-1} B(X)^t (B(X) \beta  + \varepsilon).$$ \\
 \vspace{5mm}
-What about the distribution of $\hat{\beta}$? \pause
 \begin{itemize}
 	\item Its expectation is $\beta$ \alert{$\Rightarrow$} The estimator is unbiased
 	\item Its covariance matrix is $$(B(X)^t B(X))^{-1} B(X)^t \Cov[\varepsilon,\varepsilon^t] B(X) (B(X)^t B(X))^{-1}$$
@@ -135,15 +132,42 @@ What about the distribution of $\hat{\beta}$? \pause
 \end{itemize}
 \end{frame}
 
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{}
+% The initial assumption is $ F = B(X) \beta  + \varepsilon$ and we have computed an estimator of $\beta$:
+% $$\hat{\beta} = (B(X)^t B(X))^{-1} B(X)^t F.$$
+% $\hat{\beta}$ can thus be seen as a sample from the random variable:
+% $$\hat{\beta} = (B(X)^t B(X))^{-1} B(X)^t (B(X) \beta  + \varepsilon).$$ \\
+% \vspace{5mm}
+% What about the distribution of $\hat{\beta}$? \pause
+% \begin{itemize}
+% 	\item Its expectation is $\beta$ \alert{$\Rightarrow$} The estimator is unbiased
+% 	\item Its covariance matrix is $$(B(X)^t B(X))^{-1} B(X)^t \Cov[\varepsilon,\varepsilon^t] B(X) (B(X)^t B(X))^{-1}$$
+% 	\item If $\varepsilon$ is multivariate normal, then $\hat{\beta}$ is also multivariate normal.
+% \end{itemize}
+% \end{frame}
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{}
+% Sampling in the distribution of $\hat{\beta}$ gives us a large variety of models which represent the uncertainty about our estimation:
+% \begin{exampleblock}{Back to the example}
+% \begin{center}
+%   \includegraphics[height=5cm]{figures/R/linreg_4}
+% \end{center}
+% \end{exampleblock}
+% \end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
-Sampling in the distribution of $\hat{\beta}$ gives us a large variety of models which represent the uncertainty about our estimation:
 \begin{exampleblock}{Back to the example}
+Be obtain uncertainty on the model
 \begin{center}
   \includegraphics[height=5cm]{figures/R/linreg_4}
 \end{center}
 \end{exampleblock}
 \end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
@@ -260,7 +284,7 @@ A covariance matrix is
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
-The density of a multivariate Gaussian is:
+The pdf of a multivariate Gaussian is:
 \begin{equation*}
 f_Y(x) = \frac{1}{\displaystyle (2 \pi)^{n/2} |\Sigma|^{1/2}} \exp \left(-\frac12 (x-\mu)^t K^{-1} (x-\mu)  \right).
 \end{equation*}
@@ -282,7 +306,7 @@ f_Y(x) = \frac{1}{\displaystyle (2 \pi)^{n/2} |\Sigma|^{1/2}} \exp \left(-\frac1
   \item For a given covariance matrix $K$ and independent $\mathcal{N}(0,1)$ samples, how can we generate $\mathcal{N}(\mu,K)$ random samples?
 \end{itemize}
 \end{exampleblock}
-\alert{$\Rightarrow$ R demo}
+% \alert{$\Rightarrow$ R demo}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
