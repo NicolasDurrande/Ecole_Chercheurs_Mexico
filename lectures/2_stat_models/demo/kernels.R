@@ -1,5 +1,3 @@
-# rodo : adds abs() around variance parameters to allow for max LL without bounds on parameters
-
 ##########################################
 ##########################################
 ## helpers
