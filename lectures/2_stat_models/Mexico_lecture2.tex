@@ -35,6 +35,7 @@
 \makeatother
 \newcommand\gp{Y}
 \newcommand\obs{F}
+\definecolor{myDarkPurple}{RGB}{42,41,119}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -319,14 +320,26 @@ $Y_1$ and $Y_2$ are normally distributed but \textbf{the couple $(Y_1,Y_2)$ is n
 \end{exampleblock}
 \end{frame}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
 \begin{block}{Conditional distribution}
 2D multivariate Gaussian conditional distribution:\\
+\begin{columns}
+\begin{column}{5cm}
+\begin{align*}
+p(y_1 | y_2=\alpha) & = \frac{p(y_1,\alpha)}{p(\alpha)}\\[2mm]
+& = \frac{\exp({\color{myDarkPurple} \mathrm{quadratic\ in\ } y_1 \mathrm{\ and\ } \alpha})}{\mathrm{const}}\\[2mm]
+& = \frac{\exp({\color{myDarkPurple} \mathrm{quadratic\ in\ } y_1})}{\mathrm{const}}\\[2mm]
+%& = \exp({\color{myDarkPurple} \mathrm{quadratic\ in\ } y_1})\\[2mm]
+& = \mathrm{Gaussian\ distribution!}
+\end{align*}
+\end{column}
+\begin{column}{5cm}
 \begin{center}
-\includegraphics[height=6cm]{figures/ch1_condpdf1}
+\includegraphics[height=5cm]{figures/ch1_condpdf1}
 \end{center}
+\end{column}
+\end{columns}
 The conditional distribution is still Gaussian!
 \end{block}
 \end{frame}
@@ -334,18 +347,32 @@ The conditional distribution is still Gaussian!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
 \begin{block}{Conditional distribution}
-Let $(Y,Z)$ be a Gaussian vector ($Y$ and $Z$ may both be vectors) with mean $(\mu_Y,\mu_Z)^t$ and covariance matrix
+Let $(Y_1,Y_2)$ be a Gaussian vector ($Y_1$ and $Y_2$ may both be vectors):
 \begin{equation*}
 \begin{pmatrix}
-	\Cov(Y,Y) & \Cov(Y,Z)\\
-	\Cov(Z,Y) & \Cov(Z,Z)\\
-\end{pmatrix}.
+	Y_1\\
+	Y_2\\
+\end{pmatrix}
+=
+\mathcal{N}
+\left(
+\begin{pmatrix}
+	\mu_1\\
+	\mu_2\\
+\end{pmatrix},
+\begin{pmatrix}
+	\Sigma_{11} & \Sigma_{12}\\
+	\Sigma_{21} & \Sigma_{22}\\
+\end{pmatrix}
+\right).
+\vspace{5mm}
 \end{equation*}
-The conditional distribution of $Y$ knowing $Z$ is still multivariate normal $Y|Z \sim \mathcal{N}(\mu_{cond},\Sigma_{cond})$ with
+The conditional distribution of $Y_1$ given $Y_2$ is:
+ $$Y_1|Y_2 \sim \mathcal{N}(\mu_\mathrm{cond},\Sigma_\mathrm{cond})$$
 \begin{equation*}
 \begin{split}
-	\mu_{cond} &= \E [Y|Z] = \mu_Y + \Cov(Y,Z) \Cov(Z,Z)^{-1} (Z-\mu_Z)\\
-	\Sigma_{cond} &= \Cov [Y,Y|Z] = \Cov(Y,Y) - \Cov(Y,Z) \Cov(Z,Z)^{-1} \Cov(Z,Y)
+	\text{with \qquad} \mu_\mathrm{cond} &= \E [Y_1|Y_2] = \mu_1 + \Sigma_{12} \Sigma_{22}^{-1} (Y_2-\mu_2)\\
+	\Sigma_\mathrm{cond} &= \Cov [Y_1,Y_1|Y_2] = \Sigma_{11} - \Sigma_{12} \Sigma_{22}^{-1} \Sigma_{21}
 \end{split}
 \end{equation*}
 \end{block}
@@ -360,8 +387,6 @@ The conditional distribution of $Y$ knowing $Z$ is still multivariate normal $Y|
 \end{center}
 \end{exampleblock}
 \end{frame}
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{2. Gaussian processes}
@@ -384,10 +409,13 @@ We will use the notation $Z \sim \mathcal{N}(m(.),k(.,.))$.\\
 \begin{frame}{}
 Let's look at the sample paths of a Gaussian Process!\\
 \vspace{2mm}
-\alert{$\Rightarrow$ Shiny App:} \url{https://github.com/NicolasDurrande/shinyApps} \\
-\vspace{5mm}
-In order to simulate sample paths from a GP $Z \sim \mathcal{N}(m(.),k(.,.))$, we consider the samples discretised on a fine grid.
-\vspace{5mm}
+\begin{center}
+\includegraphics[height=5cm]{figures/python/gp_samples}
+\end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
 \begin{exampleblock}{Exercise: Simulating sample paths}
 Let X be a set 100 regularly spaced points over the input space of $Z$.
 \begin{itemize}
@@ -445,7 +473,7 @@ There are a lot of functions that have already been proven psd:\\
 \vspace{2mm}
 \normalsize
 The parameter $\sigma^2$ is called the \textbf{variance} and $\theta$ the \textbf{length-scale}.\\
-\alert{$\Rightarrow$ Shiny App}
+\alert{$\Rightarrow$ Shiny App:} \url{https://github.com/NicolasDurrande/shinyApps} \\
 \end{frame}
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -541,21 +569,6 @@ it is the sample path of a Gaussian process $Z \sim \mathcal{N}(0,k)$:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
-In practice, the conditional distribution can be obtained analyticaly:\\
-\vspace{5mm}
-By definition, $(Z(x),Z(X))$ is multivariate normal so we know the distribution of $Z(x)|Z(X)=F$ is $\mathcal{N}(m(.),c(.,.))$ with:
-\begin{equation*}
-\begin{split}
-    m(x) &= \E[Z(x)|Z(X) \shorteq F] \\
-    &= k(x,X) k(X,X)^{-1} F \\ \vspace{3mm}
-    c(x,y) &= \Cov[Z(x),Z(y)|Z(X) \shorteq F] \\
-    &= k(x,y) - k(x,X) k(X,X)^{-1} k(X,y)
-\end{split}
-\end{equation*}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
 A few remarkable properties of GPR models
 \begin{itemize}
 	\item They (can) interpolate the data-points
@@ -600,6 +613,8 @@ The kernel has to be chosen accordingly to our prior belief on the behaviour of 
   \item is it stationary ?
   \item ...
 \end{itemize}
+\vspace{5mm}
+\alert{$\Rightarrow$ R volcano demo}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -671,16 +686,6 @@ It is thus possible to maximise $L$ -- or $\log(L)$ -- with respect to the kerne
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Model validation}
 \subsection{}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-We have seen that given some observations $F=f(X)$, it is very easy to build lots of models, either by changing the kernel parameters or the kernel itself.\\ \vspace{5mm}
-The interesting question now is to know how to get a good model. To do so, we will need to answer the following questions:
-\begin{itemize}
-	\item What is a good model?
-	\item How to measure it?
-\end{itemize}
-\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
