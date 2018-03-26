@@ -1,0 +1,59 @@
+\documentclass[12pt]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{mathpazo} % math & rm
+% \linespread{1.05}        % Palatino needs more leading (space between lines)
+\usepackage[scaled]{helvet} % ss
+\usepackage{courier} % tt
+\normalfont
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage{amsthm,amssymb,amsbsy,amsmath,amsfonts,amssymb,amscd}
+\usepackage{dsfont}
+\usepackage{tasks}
+\usepackage{enumitem}
+\usepackage[top=2cm, bottom=3cm, left=3cm , right=3cm]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{automata,arrows,positioning,calc}
+\newcommand{\R}{\texttt{R}}
+
+\begin{document}
+\begin{center}
+	\rule{\textwidth}{1pt}
+	\\ \ \\
+	{\LARGE \textbf{TP cours 2 : Modélisation par krigeage}}\\
+	\vspace{3mm}
+	{\large Ecole-chercheur Mexico, La Rochelle \\ \vspace{3mm}}
+	{\normalsize N. Durrande - V. Picheny}\\
+	\vspace{3mm}
+	\rule{\textwidth}{1pt}
+	\vspace{5mm}
+\end{center}
+Cette session est dédiée à la construction d'un modèle de krigeage pour approximer la fonction  \texttt{compute\_wls} qui correspond à l'erreur du simulateur numérique. Ce metamodèle sera utilisé par la suite pour l'étape de calibration du simulateur.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Construction d'un modèle 1D}
+
+\paragraph{Q1.} Un jeu de données jouet vous est fourni dans le fichier \texttt{toy\_data.Rdata}. Charger le à l'aide de la fonction \texttt{load} et représenter graphiquement \texttt{Y} contre \texttt{X}. Que pouvez-vous intuiter de la régularité de la fonction $f$ ?
+
+\paragraph{Q2.} Quelques lignes de codes vous sont données pour générer des trajectoires non conditionelles à partir du package DiceKriging. Modifier la valeur des paramètres \texttt{covtype}, \texttt{coef.trend}, \texttt{coef.var} et \texttt{coef.cov} afin de comprendre l'influence de ces paramètres (il n'est pas interdit de consulter la documentation !). Trouver un jeu de paramètre qui vous semble adapté au jeu de données.
+
+\paragraph{Q3.} Simuler et représenter des trajectoires conditionnelles (option \texttt{cond} de la fonction simulate). Tracer la moyenne et des intervalles de confiance à l'aide de la fonction \texttt{sectionview} du package \texttt{DiceView}.
+
+\paragraph{Q4.} Changer les paramètres d'appel de la fonction \texttt{km} afin d'estimer les paramètres de covariance par maximum de vraisemblance. Vous pouvez ensuite utiliser la commande \texttt{print(m)} pour afficher des détails sur le modèle. Les paramètres trouvés sont-ils proche de ceux que vous aviez intuités ?
+
+\paragraph{Q5.} La fonction \texttt{leaveOneOut.km} est bien pratique pour calculer les prédictions du modèle aux points du plan d'expérience en utilisant tous les points du plan sauf celui où l'on effectue la prédiction. Utiliser ce vecteur de prédiction pour calculer les résidus standardisés (erreur de prédiction divisée par l'écart type de prédiction). Les comparer avec une distribution normale centrée réduite. Le résultat vous parrait-il satisfaisant ?  
+
+\paragraph{Q6.} Utiliser la fonction \texttt{predict} pour prédire la valeur de $f$ au point $x=5$. Pouvez-vous expliquer (et critiquer) le résultat obtenu ? Créer un nouveau modèle en choisissant la valeur par défaut de \texttt{coef.trend} et jouer sur la formule (premier argument) de la fonction \texttt{km} pour obtenir un modèle plus satisfaisant.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Cas test du volcan}
+
+\paragraph{Q7.} Récupérer le meilleur plan d'expérience de 100 points en dimension 5 obtenu lors de la séance d'hier. Si vous n'êtes pas arrivé à un résultat convainquant vous pouvez utiliser la correction présente sur le dropbox.
+
+\paragraph{Q8.} Reprendre les questions Q4, Q5 et Q6 (en les adaptant si nécessaire) sur les données de calibration du volcan pour obtenir un modèle qui vous semble probant.
+
+\end{document}
+
