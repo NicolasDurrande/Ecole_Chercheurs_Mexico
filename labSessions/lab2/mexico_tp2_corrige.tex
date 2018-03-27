@@ -1,0 +1,188 @@
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{amsthm,amssymb,amsbsy,amsmath,amsfonts,amssymb,amscd}
+\usepackage{dsfont}
+\usepackage{array}
+\usepackage{fancyvrb}
+
+\title{TP du cours métamodélisation - corrigé}
+\author{Nicolas Durrande, Victor Picheny,}
+\date{\null}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Q1}
+\begin{verbatim}
+ plot(X, Y)
+\end{verbatim}
+\includegraphics[trim=0mm 0mm 0mm 0mm, clip, width=\textwidth]{plotXY.pdf}
+La fonction semble très régulière, probablement croissante.
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Q2 et Q3}
+ \begin{Verbatim}[fontsize=\small]
+m <- km(y~1, design=data.frame(x=X), response=data.frame(y=Y),
+        coef.trend = 0, nugget=1e-8,
+        covtype="gauss", coef.var=4, coef.cov=.5)
+
+x <- matrix(seq(-0.2, 1.2, 0.01))
+Z <- t(simulate(m, 10, newdata=data.frame(x=x), cond=FALSE))
+matplot(x, Z, type='l', col=1)
+
+Zc <- t(simulate(m, 10, newdata=data.frame(x=x), cond=TRUE))
+matplot(x, Zc, type='l', col=1)
+points(X, Y)
+\end{Verbatim}
+
+\texttt{km} crée un modèle de krigeage, et \texttt{simulate} génère des trajectoires correspondant aux points \texttt{x}. 
+En changeant \texttt{cond=TRUE}, on conditionne aux observations (les trajectoires passent par les observations).
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Trajectoires interpolantes ou non, mais de même régularité}
+\includegraphics[trim=0mm 0mm 0mm 0mm, clip, width=.7\textwidth]{traj1.pdf} 
+\includegraphics[trim=0mm 0mm 0mm 0mm, clip, width=.7\textwidth]{traj2.pdf} 
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Q4: étude d'un modèle \texttt{km}}
+ \begin{Verbatim}[fontsize=\tiny]
+m <- km(y~1, design=data.frame(x=X), response=data.frame(y=Y), 
+        covtype="gauss", coef.trend = 0, nugget=1e-8)
+print(m)
+
+Trend  coeff.:
+                       
+ (Intercept)     0.0000
+
+Covar. type  : gauss 
+Covar. coeff.:
+               Estimate
+    theta(x)     0.5349
+
+Variance estimate: 35.01083
+
+Nugget effect : 1e-08
+\end{Verbatim}
+\begin{itemize}
+ \item \texttt{Trend coeff} : moyenne, ici imposée égale à zéro
+ \item \texttt{Covar. coeff} : paramètre de portée (homogène à une distance), estimé par max de vraisemblance
+ \item \texttt{Variance estimate} : paramètre de variance du processus, estimé par max de vraisemblance
+\end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Q5}
+ \begin{verbatim}
+res <-leaveOneOut.km(m, type='SK')
+res_std <- (Y-res$mean) / res$sd
+
+hist(res_std, freq=FALSE, xlim=c(min(X, -3), max(X, 3)))
+x <- seq(-3, 3, 0.03)
+lines(x, dnorm(x))
+\end{verbatim}
+\includegraphics[trim=0mm 0mm 0mm 0mm, clip, width=.7\textwidth]{XVerror.pdf} 
+
+Ici : les erreurs par validation croisée, une fois normalisées, sont raisonnablement gaussiennes centrées réduites.
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Q5 : \texttt{plot(m)}}
+\includegraphics[trim=0mm 0mm 0mm 0mm, clip, width=.6\textwidth]{plotm.pdf} 
+\begin{itemize}
+ \item Premier graphe : les erreurs sont toutes très faibles (modèle très précis)
+ \item Deuxième graphe : on ne voit pas de structure pour les erreurs (OK)
+ \item Troisième graphe : les résidus sont bien gaussiens (points sur la droite des quantiles)
+\end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Q6}
+ \begin{Verbatim}[fontsize=\small]
+sectionview(m, xlim=c(-0.2, 4), ylim=c(-18, 22))
+
+# modèle de krigeage ordinaire (estimation tendance constante)
+m <- km(y~1, design=data.frame(x=X), response=data.frame(y=Y), 
+        covtype="gauss", nugget=1e-8)
+sectionview(m, xlim=c(-0.2, 4), ylim=c(-18, 22))
+
+# modèle de krigeage universel (estimation tendance lineaire)
+m <- km(y~x, design=data.frame(x=X), response=data.frame(y=Y), 
+        covtype="gauss", nugget=1e-8)
+sectionview(m, xlim=c(-0.2, 4), ylim=c(-18, 22))
+\end{Verbatim}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Q6}
+\begin{columns}
+ \begin{column}{.49\textwidth}
+  \includegraphics[trim=0mm 0mm 0mm 0mm, clip, width=\textwidth]{GP2.pdf}
+\includegraphics[trim=0mm 0mm 0mm 0mm, clip, width=\textwidth]{GP3.pdf} 
+\includegraphics[trim=0mm 0mm 0mm 0mm, clip, width=\textwidth]{GP4.pdf} 
+ \end{column}
+ \begin{column}{.49\textwidth}
+ En l'absence d'observations proches : le krigeage effectue un ``retour à la moyenne''.
+ \smallskip
+ 
+  Choisir la tendance permet d'extrapoler... mais peut aussi amplifier l'erreur !
+
+ \end{column}
+\end{columns}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Q7 et Q8}
+ \begin{Verbatim}[fontsize=\tiny]
+km(formula = y ~ ., design = data.frame(x = X), response = data.frame(y = Y), 
+    covtype = "matern5_2", nugget = 1e-08)
+
+Trend  coeff.:
+               Estimate
+ (Intercept)    -1.5942
+         x.1     0.0819
+         x.2    -0.0102
+         x.3     0.8546
+         x.4     2.5819
+         x.5    -0.1406
+
+Covar. type  : matern5_2 
+Covar. coeff.:
+               Estimate
+  theta(x.1)     1.9621
+  theta(x.2)     1.9661
+  theta(x.3)     1.6171
+  theta(x.4)     0.4056
+  theta(x.5)     0.0561
+
+Variance estimate: 0.2128299
+\end{Verbatim}
+On observe bien : un paramètre de tendance et de portée par $x.i$. Sachant que chaque $x.i$ varie entre 0 et 1, une portée égale à 2 est très élevée (le krigeage est presque constant dans cette direction, $x.i$ est peu influent), 
+et de 0.05 très petite (beaucoup de variation dans cette direction).
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Q8}
+\includegraphics[trim=0mm 0mm 0mm 0mm, clip, width=.8\textwidth]{plotvolcan.pdf} 
+
+Validation : erreur par validation croisée plutôt bonne, quelques points imprécis pour les valeurs faibles de $Y$. QQ-plot : OK sauf pour les quantiles faibles.
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Q8}
+\includegraphics[trim=0mm 0mm 0mm 0mm, clip, width=.8\textwidth]{GPvolcan.pdf} 
+
+On retrouve bien : un modèle très ``plat'' pour $x.1$, $x.2$, $x.3$, très variable pour $x.5$.
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
