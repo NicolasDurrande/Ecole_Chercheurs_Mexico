@@ -900,38 +900,13 @@ If the trend is not constant but linear, quadratic, etc. it is interesting to co
 \begin{equation*}
 	Z(x) = Y(x) + \sum_i \beta_i h_i(x)
 \end{equation*}
-where the $h_i(x)$ are basis functions and the $\beta_i$ are unknown scalars.\\ \vspace{5mm}
-As previously, we can consider the maximum likelihood estimator 
+The model we obtain is called \textbf{universal kriging}. The maximum likelihood estimator gives 
 \begin{equation*}
  \hat{\beta} = (H^t k(X,X)^{-1} H)^{-1} H^t k(X,X)^{-1} F 
 \end{equation*} 
-where $H$ is the matrix of general term $H_{i,j}=h_j(X_i)$.
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-The final equations are very similar to ordinary kriging:
-\begin{block}{Universal kriging}
-\begin{equation*}
-\begin{split}
-m(x) &= h(x)^t\hat{\beta} - k_x K^{-1} (F - h(X)^t\hat{\beta}) \\
-c(x,y) &=  k(x,y) - k_x K^{-1} k_y^t \\
-& \qquad +(h(x)^t + k_xK^{-1}H)^t(H^t K^{-1} H)^{-1}(h(y)^t + k_yK^{-1}H) \\
-\end{split}
-\end{equation*} 
-\\ \vspace{3mm}
-where $k_x = k(x,X)$ and $K = k(X,X)$.
-\end{block}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-\structure{Remarks}
-\begin{itemize}
-	\item Ordinary kriging is a special case of universal kriging with only one constant basis function.
-	\item The model always interpolates whatever $\hat{\beta}$ is.
-	\item the trend part can be seen as generalised least square (regression with correlated residuals)
-\end{itemize}
+where $H$ is the matrix of general term $H_{i,j}=h_j(X_i)$.\\
+\vspace{5mm}
+The final model equations are similar to ordinary kriging. 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
