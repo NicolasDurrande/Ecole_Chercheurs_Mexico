@@ -1,0 +1,548 @@
+\subsection{Introduction}
+\begin{frame}{Contexte}
+\begin{block}{Expériences numériques comme aide à la conception / décision}
+ \begin{itemize}
+  \item Réponse du code de calcul = performance ou coût
+  \item Recherche des paramètres optimaux :
+  $$x^* = \arg \min cout(x) \text{ ou } \arg \max {perf(x)}$$
+  \item L'optimisation nécessite beaucoup d'appels au code
+  \item Métamodèle : solution naturelle
+ \end{itemize}
+\end{block}
+
+\begin{exampleblock}{Lien avec la problématique précédente}
+Le métamodèle doit être précis seulement dans les régions importantes (proche de l'extremum)
+$\Rightarrow$ répartition des expériences ``ciblée''
+\end{exampleblock}
+
+\begin{alertblock}{Démarche nécessairement séquentielle}
+Il faut faire des expériences pour connaître les régions cibles !
+\end{alertblock}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+  \frametitle{Planification d'expériences et optimisation globale}
+  \begin{block}{Optimisation locale}
+Amélioration depuis un point initial
+  \end{block}
+
+  \begin{block}{Optimisation globale : le \textbf{compromis exploration / intensification}}
+  \begin{itemize}
+   \item Exploration : recherche partout dans l'espace pour ne pas rater la zone optimale 
+   \item Intensification : une fois une zone identifiée : on recherche le minimum local
+  \end{itemize}
+  \end{block}
+  
+\begin{exampleblock}{Dans un contexte de planification d'expériences}
+  \begin{itemize}
+   \item Exploration : remplissage d'espace
+   \item Intensification : ``ciblage''
+  \end{itemize}
+\end{exampleblock}
+  
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+  \frametitle{Introduction à l'optimisation globale : l'algorithme DIRECT}
+  Garanti sans métamodèle !
+  \begin{block}{DIRECT : DIviding RECTangles}
+  \begin{itemize}
+   \item Découpage de l'espace en (hyper)rectangles
+   \item Un échantillon au centre de chaque rectangle
+   \item On divise les rectangles les plus ``intéressants'' :
+   \begin{itemize}
+     \item soit les plus grands (exploration)
+     \item soit ceux qui ont une valeur au centre basse (intensification)
+   \end{itemize}
+   \item Pour diviser : ajout de 2 points, division en 3
+  \end{itemize}
+  \end{block}
+  \scriptsize{
+ \begin{thebibliography}{7}
+\beamertemplatearticlebibitems
+%\beamertemplatebookbibitems
+     \bibitem{direct}
+     D.~Jones, C.~Perttunen, B.~Stuckman (1993)
+         \newblock Lipschitzian optimization without the Lipschitz constant
+         \newblock Journal of Optimization Theory and Applications 79(1), 157-181
+ \end{thebibliography}
+}
+\normalsize
+%   \begin{block}{Compromis exploration / intensification}
+% Pour (presque) \textbf{chaque} taille de rectangle, on divise celui qui a la meilleure valeur observée
+%   \end{block}
+%   
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Exemple en dimension 2}
+%   \includegraphics[width=.45\paperwidth]{fig/direct1.png}
+%   \\
+\begin{itemize}
+ \item Départ : 3 points équirépartis dans une direction aléatoire
+ \item On divise le rectangle ayant la meilleure observations
+\end{itemize}
+
+  \includegraphics[width=.45\textwidth]{fig/direct1.pdf} \hspace{5mm}
+\includegraphics[width=.45\textwidth]{fig/direct1bis.pdf}
+  \end{frame}
+
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Exemple en dimension 2}
+%   \includegraphics[width=.45\paperwidth]{fig/direct1.png}
+%   \\
+  \includegraphics[width=.9\textwidth]{fig/direct2.png}
+\end{frame}
+
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Après 191 évaluations}
+\begin{itemize}
+ \item Echantillonnage intense dans la zone de l'optimum
+ \item Bonne exploration 
+\end{itemize}
+
+
+
+\begin{columns}
+ \begin{column}{80mm}
+ \includegraphics[width=\textwidth]{fig/direct3.png}  
+ \end{column}
+ \begin{column}{40mm}
+   \scriptsize{Source figures :
+ \begin{thebibliography}{1}
+\beamertemplatearticlebibitems
+     \bibitem{fin}
+     D. E. Finkel
+         \newblock DIRECT Optimization Algorithm User Guide (2003)
+ \end{thebibliography}}
+ \end{column}
+\end{columns}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Intêret et limites}
+\begin{itemize}
+ \item[$+$] Exploration de tout l'espace de recherche
+ \item[$+$] Stratégie robuste
+ \item[$-$] Limité aux petites dimensions
+ \item[$-$] Exploitation limitée de l'information
+\end{itemize}
+\vspace{5mm}
+$\Rightarrow$ même principe général, avec un métamodèle ?
+\end{frame}
+%-----------------------------------------------------
+% \subsection{Optimisation et métamodèles}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Optimisation et métamodèle : ce qu'on est tenté de faire...}
+\begin{columns}[l]
+ \begin{column}{.51\textwidth}
+  
+\begin{block}{``Le métamodèle donne l'optimum''}
+ \begin{itemize}
+  \item On cherche le minimum $x^*$ sur le métamodèle
+  \item On évalue le vrai $y(x^*)$ sur le simulateur
+ \end{itemize}
+$\Rightarrow$ C'est fini !
+\end{block}
+
+\begin{block}{Répartition de l'effort}
+ \begin{itemize}
+  \item Plan initial : 49 expériences
+  \item 98\% exploration, 2\% exploitation
+ \end{itemize}
+\end{block}
+ \end{column}
+ \begin{column}{.49\textwidth}
+  \includegraphics[width=\textwidth]{fig/exoptim1.pdf}
+ \end{column}
+\end{columns}
+\vspace{1mm}
+\centering
+\textcolor{red}{Que faire si $x^*$ n'est pas bon ?}
+\end{frame}
+
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Optimisation et métamodèle : ce qu'il faut faire}
+\begin{block}{Si le budget est fixe}
+ \begin{itemize}
+  \item On divise le budget en 2
+  \item Budget 1 : plan initial (LHS)
+  \item Budget 2 : optimisation
+ \end{itemize}
+\end{block}
+
+\begin{block}{Utilisation \textbf{séquentielle} du métamodèle}
+ \begin{itemize}
+  \item Métamodèle initial : \textit{a priori} peu précis
+  \item Le métamodèle sert à \textbf{choisir} pour les nouvelles observations
+  \item A chaque nouvelle observation : amélioration du métamodèle
+ \end{itemize}
+\end{block}
+\end{frame}
+
+% %-----------------------------------------------------
+% \begin{frame}
+% \frametitle{Schéma général : métamodèle = guide}
+% 
+%    \begin{tikzpicture}[scale=1]
+%    \draw(6,2) rectangle (11,3);
+%    \draw(8.5,2.5) node{PX initial};
+%    
+%    \draw[<-,thick] (5,2.5)--(6,2.5);
+%    
+%    \draw(0,2) rectangle (5,3);
+%    \draw(2.5,2.5) node{Simulations};
+%    
+%    \draw[<-,thick] (2.5,1)--(2.5,2);
+%    
+%    \draw(0,0) rectangle (5,1);
+%    \draw(2.5,.5) node{Construction du métamodèle};
+%  \draw[<-,thick] (2.5,-1)--(2.5,0);
+%     \draw(0,-2) rectangle (5,-1);
+%    \draw(2.5,-1.5) node{Choix de la nouvelle xp};
+%  \draw[<-,thick] (2.5,-3)--(2.5,-2);
+%      \draw(0,-4) rectangle (5,-3);
+%    \draw(2.5,-3.5) node{Simulation};
+%   
+%   \draw[->,thick] (5,-3.5)--(6,-3.5);
+%   
+%    \draw(6,-4) rectangle (11.5,-3);
+%    \draw(8.75,-3.5) node{Enrichissement du métamodèle};
+%   \draw[-,thick] (8.75,-3)--(8.75,-1.5);
+%   \draw[<-,thick] (5,-1.5)--(8.75,-1.5);
+%  \end{tikzpicture}
+% \end{frame}
+
+%-----------------------------------------------------
+\subsection{Optimisation basée sur les modèles polynomiaux}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Optimisation basée sur les modèles polynomiaux}
+\begin{block}{Principe}
+ \begin{itemize}
+  \item On construit une surface de réponse $y = \beta_0 + \beta_1 x + \beta_2 x^2$
+  \item On cherche le point qui minimise la surface de réponse
+  \item On ajoute ce point
+  \item On met à jour la surface de réponse
+  \item On recommence...
+ \end{itemize}
+\end{block}
+
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.37\paperwidth]{fig/prs1.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.37\paperwidth]{fig/prs2.png}
+\end{frame}
+
+%-----------------------------------------------------
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Itérations 3 à 7}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs3.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs4.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs5.png}
+\\
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs6.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs7.png}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Optimisation basée sur les modèles polynomiaux}
+\begin{block}{Problème : modèle ``rigide''}
+Le modèle ne s'ajuste pas aux données : 
+$ Y = \mathbf{X} \beta + \epsilon $
+
+Pas de convergence vers un modèle précis, même localement
+\end{block}
+
+\begin{exampleblock}{Solutions}
+\begin{enumerate}
+ \item Augmenter le dégré du polynôme \\
+ \textcolor{red}{$\Rightarrow$ risque de surapprentissage \& d'instabilité !}
+ \item Supprimer des points \\
+ $\Rightarrow$ méthode \textbf{de région de confiance}
+\end{enumerate}
+\end{exampleblock}
+\end{frame}
+
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Régions de confiance : principe}
+\begin{block}{Modèle quadratique ``creux''}
+\begin{itemize}
+ \item Valide à l'intérieur d'une région de confiance (petite)
+ \item Construit uniquement avec les points à l'intérieur de la région
+ \item Selon les valeurs des simulations, on modifie la taille de la région
+\end{itemize}
+\end{block}
+
+\begin{block}{Gestion de la région de confiance}
+A chaque itération :
+\begin{itemize}
+ \item $\hat y (x^*)$ bon $\Rightarrow$ confiance dans le modèle : on augmente la taille
+ \item $\hat y (x^*)$ mauvais $\Rightarrow$ modèle peu fiable : on diminue la taille
+\end{itemize}
+\end{block}
++ beaucoup de règles pour sélectionner les points et enrichir le plan d'expériences
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Illustration (source : F. Vanden Berghen)}
+\includegraphics[width=.5\textwidth]{trm/Image2.png}
+\includegraphics[width=.5\textwidth]{trm/Image3.png}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}[noframenumbering]
+\frametitle{Illustration (source : F. Vanden Berghen)}
+\includegraphics[width=.5\textwidth]{trm/Image4.png}
+\includegraphics[width=.5\textwidth]{trm/Image5.png}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}[noframenumbering]
+\frametitle{Illustration (source : F. Vanden Berghen)}
+\includegraphics[width=.5\textwidth]{trm/Image6.png}
+\includegraphics[width=.5\textwidth]{trm/Image7.png}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Avantages et inconvénients}
+\begin{block}{Avantages}
+\begin{itemize}
+ \item Garantie de convergence
+ \item Méthodes assez parcimonieuses
+ \item Robuste
+ \item Accepte un assez grand nombre de variables
+\end{itemize}
+\scriptsize{
+ \begin{thebibliography}{1}
+\beamertemplatearticlebibitems
+     \bibitem{conn}
+     Conn, Scheinberg, and Vicente
+         \newblock Introduction to derivative-free optimization
+         \newblock MPS-SIAM Series on Optimization (2009)
+ \end{thebibliography}}
+\end{block}
+
+\begin{alertblock}{Méthode locale}
+\begin{itemize}
+ \item Pas de métamodèle final utilisable globalement
+ \item Proche des méthodes de gradient
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+%-----------------------------------------------------
+\subsection{Optimisation sur base de krigeage}
+%-----------------------------------------------------
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Optimisation à l'aide du krigeage} %Comment utiliser le krigeage pour optimiser ?
+\begin{columns}[t]
+\begin{column}{6cm}
+
+\begin{block}{Atouts du modèle}
+ \begin{itemize}
+  \item Global
+  \item Flexible
+  \item Information riche :
+   \begin{itemize}
+   \item Réalisations conditionnelles
+    \item Moyenne : $m(x)$
+    \item Variance $s^2(x)$
+   \end{itemize}
+ \end{itemize}
+\end{block}
+\end{column}
+
+\begin{column}{6cm}
+\begin{figure}
+	\centering
+	\includegraphics[trim=3mm 0 2mm 0,clip, width=\textwidth]{fig/4real.pdf}
+\end{figure}	
+
+\end{column}
+\end{columns}
+
+\begin{exampleblock}{Critère d'échantillonnage}
+  On utilise le métamodèle pour estimer  ``l'intérêt'' d'une observation potentielle 
+  
+  $\Rightarrow$ On effectue la simulation la plus intéressante !
+\end{exampleblock}
+
+% \begin{block}{Compromis exploration / intensification}
+%  \begin{itemize}
+%   \item Exploration : $s^2(x)$ grand ($\sim$ grands rectangles) 
+%   \item Intensification : $m(x)$ petit ($\sim$ faibles valeurs)
+%  \end{itemize}
+% \end{block}
+\end{frame}
+
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Différents critères}
+\begin{block}{Cf. Jones (2001)}
+ \begin{itemize}
+  \item Pure intensification : \textcolor{green}{$\min m(x)$}
+  \item Pure exploration : \textcolor{red}{$\max s^2(x)$}
+  \item Un compromis simple : \textcolor{blue}{$\min m(x) - \alpha s(x)$}
+  \end{itemize}
+\end{block}
+  \begin{figure}
+	\centering
+\includegraphics[width=.63\textwidth]{fig/taxo.pdf}
+\end{figure}
+\scriptsize{
+ \begin{thebibliography}{7}
+\beamertemplatearticlebibitems
+%\beamertemplatebookbibitems
+     \bibitem{taxo}
+     D.~Jones (2001), \textcolor{black}{A taxonomy of global optimization methods based on response surfaces},
+         \newblock Journal of global optimization 21(4), 345-383
+ \end{thebibliography}
+}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Le meilleur compromis : amélioration espérée}
+\begin{block}{ (ou \textit{EI: Expected Improvement})}
+ \begin{itemize}
+  \item $n$ observations : meilleur choix $y_{\min} = \min(y_1, \ldots, y_n)$
+  \item Amélioration à $n+1$ = gain sur la fonction coût : $\left( y_{\min} - Y(x) \right)^+$
+  \item Au temps $n$ : l'amélioration est une v.a., \textit{mais} on connaît sa loi
+  \item \textbf{Espérance de l'amélioration :} $EI(x) = \mathbb{E} \left[ \left(y_{\min} - Y(x) \right)^+ \right]$
+ \end{itemize}
+\end{block}
+
+\includegraphics[width=\textwidth]{fig/EI2.pdf}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{L'amélioration espérée}
+\begin{block}{Forme analytique simple}
+$$EI(x) = s(x) \left( m(x)\Phi(\xi(x)) + \phi(\xi(x))\right)$$
+avec $\xi(x)=(y_{\min} - m(x))/s(x)$.
+\end{block}
+
+\begin{exampleblock}{Quelques propriétés}
+ \begin{itemize}
+  \item $EI(x)=0$ aux points déjà visités, positif partout ailleurs
+  \item Fonction multimodale
+  \item Correspond à la minimisation du regret espéré
+  \item Stratégie optimale... à un pas
+ \end{itemize}
+
+\end{exampleblock}
+
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{L'algorithme \textit{Efficient Global Optimization}}
+
+\begin{block}{Initialisation}
+\begin{itemize}
+ \item Réalisation d'un plan initial
+ \item Construction d'un krigeage
+\end{itemize} 
+\end{block}
+
+\begin{block}{Boucle d'optimisation}
+\begin{itemize}
+ \item Recherche du point qui maximise l'amélioration espérée
+ \item Calcul du vrai modèle en ce point
+ \item Ajout du point au plan et mise à jour du modèle
+\end{itemize}
+\end{block}
+
+\scriptsize{
+ \begin{thebibliography}{7}
+\beamertemplatearticlebibitems
+%\beamertemplatebookbibitems
+     \bibitem{ego}
+     D.~Jones, M.~Schonlau, W.~Welch
+         \newblock Efficient global optimization of expensive black-box functions
+         \newblock Journal of Global optimization 13 (4), 455-492 (1998)
+ \end{thebibliography}
+}
+\end{frame}
+%-----------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{EGO: illustration 1/6} \begin{figure}[h!] \centering	\includegraphics[width=7cm]{fig/ego1.png} \end{figure} \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[noframenumbering]{EGO: illustration  2/6}\begin{figure}[h!]  \centering	\includegraphics[width=7cm]{fig/ego2.png} \end{figure} \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[noframenumbering]{EGO: illustration  3/6}\begin{figure}[h!]  \centering	\includegraphics[width=7cm]{fig/ego3.png} \end{figure} \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[noframenumbering]{EGO: illustration  4/6}\begin{figure}[h!]  \centering	\includegraphics[width=7cm]{fig/ego4.png} \end{figure} \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[noframenumbering]{EGO: illustration  5/6}\begin{figure}[h!]  \centering	\includegraphics[width=7cm]{fig/ego5.png} \end{figure} \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[noframenumbering]{EGO: illustration  6/6}\begin{figure}[h!]  \centering	\includegraphics[width=7cm]{fig/ego6.png} \end{figure} \end{frame}
+%-----------------------------------------------------
+\begin{frame}[noframenumbering]{Retour sur l'exemple 2D}
+\begin{figure}
+\hspace{5mm} Vraie fonction + 7 expériences \hspace{20mm} EI
+	\includegraphics[trim=12mm 45mm 12mm 40mm,width=.8\textwidth, clip]{fig/exEI2D1.pdf}\\
+Après 12 itérations	\includegraphics[trim=12mm 48mm 90mm 40mm,width=.4\textwidth, clip]{fig/exEI2D2.pdf}
+\end{figure}
+\end{frame}
+\begin{frame}
+\frametitle{Remarques}
+\begin{block}{Compromis exploration / intensification}
+Géré automatiquement par le critère
+\end{block}
+
+\begin{block}{En pratique}
+\begin{itemize}
+ \item Très performant en dimension petite ($\leq$50)
+ \item Stratégie coûteuse (boucle d'optimisation emboîtée) : réservée aux modèles coûteux
+\end{itemize}
+\end{block}
+
+% \begin{block}{Nombreuses extensions pour traiter des cas spécifiques}
+% Multi-objectifs, contraintes, bruit, optimisation robuste, etc.
+% \end{block}
+
+% \begin{exampleblock}{Paquets \texttt{R}}
+%  \texttt{DiceOptim} (+ \texttt{GPareto} pour le multiobjectif)
+% \end{exampleblock}
+\end{frame}
+
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{EGO en pratique : maximisation du critère}
+
+\begin{block}{Problème critique, valable aussi pour les sections précédentes !}
+\begin{itemize}
+ \item Sous-problème d'optimisation (globale) difficile !
+ \item $EI$ ``gratuit'' ($\approx 1/100s$) $\rightarrow$ méthodes intensives
+ \item De plus : gradients et hessiens analytiques
+ \item Algorithmes : stratégies évolutionnaires + Newton
+\end{itemize}
+\end{block}
+
+\begin{columns}
+ \begin{column}{.5\textwidth}
+
+\begin{figure}[h!]  \centering	
+\includegraphics[trim=1mm 15mm 20mm 20mm, clip, width=.7\textwidth]{fig/AEI.png} 
+\end{figure}  
+ \end{column}
+ \begin{column}{.5\textwidth}
+\begin{block}{cf. R package \texttt{DiceOptim}}
+\scriptsize{
+ \begin{thebibliography}{7}
+\beamertemplatearticlebibitems
+     \bibitem{dkdo}
+     O.~Roustant D.~Ginsbourger, Y.~Deville (2010)
+         \newblock DiceKriging, DiceOptim: Two R packages for the analysis of computer experiments by kriging-based metamodeling and optimization  
+         \newblock Journal of Computational Software
+ \end{thebibliography}
+}
+\end{block}
+ \end{column}
+\end{columns}
+\end{frame}
+
