@@ -13,8 +13,7 @@
 %\institute[Mines St-\'Etienne]{Nicolas Durrande (durrande@emse.fr) \\ Jean-Charles Croix (jean-charles.croix@emse.fr) \\ Mines St-\'Etienne -- France}
 %\author[Pereira, June 2017]{June 2017 -- Universidad Tecnol\'ogica de Pereira -- Colombia}
 \title[\'Ecole chercheurs MEXICO]{ \small \'Ecole chercheurs MEXICO, La Rochelle, Mars 2018\\ \vspace{3mm} \LARGE Model Based Optimization}
-\author[\quad La Rochelle, March 2018]{Nicolas Durrande, nicolas@prowler.io}
-\institute[]{PROWLER.io, Cambridge (UK) -- Mines St-\'Etienne (France)}
+\author[\quad La Rochelle, March 2018]{Victor Picheny, victor.picheny@inra.fr, Nicolas Durrande, nicolas@prowler.io}
 \date{\null}
 
 \DeclareMathOperator*{\Var}{var}
@@ -52,135 +51,63 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Model based optimisation}
-\subsection{}
+\section[Global optim.]{Introduction : global optimization}
+% \subsection{}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
-If the number of function evaluations is limited, we can run the optimization on the model instead of running it directly on the function
-\begin{center}
-\includegraphics[height=5cm]{figures/ink_mf}
-\end{center}
-In the end, we hope that:
-\begin{equation*}
-	\begin{split}
-		\argmin(m) & \approx \argmin(f)\\
-		\min(m) & \approx \min(f)\\
-	\end{split}
-\end{equation*}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-\structure{Overall framework}
-  \begin{figure}
-    \centering \sf
-    \begin{tikzpicture}[scale=0.7, every node/.style={scale=0.6}]
-
-      % \tikzstyle{Sim}=[rectangle, draw=MonBleu!20, fill=MonBleu!0];
-      % \tikzstyle{Meta}=[rectangle, draw=Orange!40, fill=MonBleu!0];
-      \tikzstyle{Mes}=[rectangle, draw=violet!20, fill=violet!0];
-
-        \node[Mes](MesIn) at (-6, 0) {
-          \parbox{2.2cm}{ %
-            \centering
-            \LARGE
-            \vspace{3mm}
-            $x$
-            \vspace{3mm}
-          }};
-
-        \node[Mes](Mes) at (0, 0) {
-          \parbox{4.5cm}{ %
-            \centering
-            \LARGE
-            \vspace{4mm}
-            \textit{costly function}\\
-            \vspace{4mm}
-          }};
-
-        \node[Mes](MesOut) at (6, 0) {
-        \parbox{4.5cm}{ %
-            \centering
-            \LARGE
-            \vspace{3mm}
-          \textit{observations}\\
-            \vspace{3mm}
-        }};
-        \draw[->, very thick, draw=MonBleu] (MesIn) -- (Mes.west);
-        \draw[->, very thick, draw=MonBleu] (Mes) -- (MesOut.west);
-
-        \node[Mes](MetaIn) at (-6, -4.5) {
-          \parbox{2.2cm}{ %
-          \centering
-            \LARGE
-            \vspace{3mm}
-            $x$
-            \vspace{3mm}
-          }};
-
-        \node[Mes](Meta) at (0, -4.5) {
-          \parbox{4.5cm}{ %
-            \centering
-            \LARGE
-            \vspace{4mm}
-            \textit{surrogate model}\\
-            \vspace{4mm}
-          }};
-
-        \node[Mes](MetaOut) at (6.0, -4.5) {
-        \parbox{4.5cm}{ %
-            \centering
-            \LARGE
-            \vspace{3mm}
-          \textit{approximations}\\
-            \vspace{3mm}
-        }};
-
-        \draw[->, very thick, draw=MonBleu] (MetaIn) -- (Meta.west);
-        \draw[->, very thick, draw=MonBleu] (Meta) -- (MetaOut.west);
-
-        \draw[->, very thick, draw=Orange!80] (MesIn) -- (Meta)
-        node [above, midway, sloped, Orange!80] {\large Design of Experiments};
-        \draw[->, very thick, draw=Orange!80] (MesOut)  -- (Meta);
-        %node [above, midway, sloped, Orange!80] {\large réponses};
-
-    \end{tikzpicture}
-    \end{figure}
-In practice, it is risky to take decisions based only on the model...\\
-\vspace{3mm}
-On the other hand, the model can be used to guide us in the search for the optimum.
-\end{frame}
-
-\begin{frame}{Contexte}
-\begin{block}{Expériences numériques comme aide à la conception / décision}
+\begin{block}{Optimisation pour l'aide à la conception / décision}
  \begin{itemize}
-  \item Réponse du code de calcul = performance ou coût
+  \item Réponse du modèle = performance ou coût
   \item Recherche des paramètres optimaux :
   $$x^* = \arg \min cout(x) \text{ ou } \arg \max {perf(x)}$$
+   \end{itemize}
+\end{block}
+
+\begin{exampleblock}{Optimisation pour la calibration}
+ \begin{itemize}
+  \item Sorties du modèle $\Rightarrow$ comparaison à des observations
+  \item On veut minimiser un écart quadratique (ou autre métrique)
+  $$x^* = \arg \min WLS(x)$$
+  \end{itemize}
+\end{exampleblock}
+
+\begin{alertblock}{Dans les 2 cas}
+ \begin{itemize}
   \item L'optimisation nécessite beaucoup d'appels au code
   \item Métamodèle : solution naturelle
  \end{itemize}
-\end{block}
-
-\begin{exampleblock}{Lien avec la problématique précédente}
-Le métamodèle doit être précis seulement dans les régions importantes (proche de l'extremum)
-$\Rightarrow$ répartition des expériences ``ciblée''
-\end{exampleblock}
-
-\begin{alertblock}{Démarche nécessairement séquentielle}
-Il faut faire des expériences pour connaître les régions cibles !
 \end{alertblock}
+
 \end{frame}
 %-----------------------------------------------------
 \begin{frame}
-  \frametitle{Planification d'expériences et optimisation globale}
+  \frametitle{Le compromis \textbf{exploration / intensification}}
+  
+  
+  \begin{block}{Est-ce qu'on souhaite}
+  \begin{itemize}
+   \item améliorer une solution existante ?
+   \item essayer ``toutes'' les valeurs possibles de paramètres pour trouver la meilleure
+  \end{itemize}
+ \end{block}
+
+  \begin{block}{Dans la vraie vie : tout essayer n'est pas possible}
+  On va chercher un compromis entre 
+  \begin{itemize}
+   \item améliorer l'existant par de petites modifications
+   \item chercher une meilleure solution radicalement différente
+  \end{itemize}
+  \end{block}
+  
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+  \frametitle{Le compromis \textbf{exploration / intensification}}
   \begin{block}{Optimisation locale}
 Amélioration depuis un point initial
   \end{block}
 
-  \begin{block}{Optimisation globale : le \textbf{compromis exploration / intensification}}
+  \begin{block}{Optimisation globale : on cherche un compromis entre}
   \begin{itemize}
    \item Exploration : recherche partout dans l'espace pour ne pas rater la zone optimale 
    \item Intensification : une fois une zone identifiée : on recherche le minimum local
@@ -287,8 +214,103 @@ Amélioration depuis un point initial
 $\Rightarrow$ même principe général, avec un métamodèle ?
 \end{frame}
 %-----------------------------------------------------
-% \subsection{Optimisation et métamodèles}
+\section[Trust regions]{Trust regions (quadratic metamodels)}
 %-----------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+Si le nombre d'appels au modèle est trop limité, on peut optimiser le métamodèle à la place :
+
+\begin{center}
+\includegraphics[height=5cm]{figures/ink_mf}
+\end{center}
+Et on espère qu'à la fin on ait :
+\begin{equation*}
+	\begin{split}
+		\argmin(m) & \approx \argmin(f)\\
+		\min(m) & \approx \min(f)\\
+	\end{split}
+\end{equation*}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+\structure{Schéma global}
+  \begin{figure}
+    \centering \sf
+    \begin{tikzpicture}[scale=0.7, every node/.style={scale=0.6}]
+
+      % \tikzstyle{Sim}=[rectangle, draw=MonBleu!20, fill=MonBleu!0];
+      % \tikzstyle{Meta}=[rectangle, draw=Orange!40, fill=MonBleu!0];
+      \tikzstyle{Mes}=[rectangle, draw=violet!20, fill=violet!0];
+
+        \node[Mes](MesIn) at (-6, 0) {
+          \parbox{2.2cm}{ %
+            \centering
+            \LARGE
+            \vspace{3mm}
+            $x$
+            \vspace{3mm}
+          }};
+
+        \node[Mes](Mes) at (0, 0) {
+          \parbox{4.5cm}{ %
+            \centering
+            \LARGE
+            \vspace{4mm}
+            \textit{costly function}\\
+            \vspace{4mm}
+          }};
+
+        \node[Mes](MesOut) at (6, 0) {
+        \parbox{4.5cm}{ %
+            \centering
+            \LARGE
+            \vspace{3mm}
+          \textit{observations}\\
+            \vspace{3mm}
+        }};
+        \draw[->, very thick, draw=MonBleu] (MesIn) -- (Mes.west);
+        \draw[->, very thick, draw=MonBleu] (Mes) -- (MesOut.west);
+
+        \node[Mes](MetaIn) at (-6, -4.5) {
+          \parbox{2.2cm}{ %
+          \centering
+            \LARGE
+            \vspace{3mm}
+            $x$
+            \vspace{3mm}
+          }};
+
+        \node[Mes](Meta) at (0, -4.5) {
+          \parbox{4.5cm}{ %
+            \centering
+            \LARGE
+            \vspace{4mm}
+            \textit{surrogate model}\\
+            \vspace{4mm}
+          }};
+
+        \node[Mes](MetaOut) at (6.0, -4.5) {
+        \parbox{4.5cm}{ %
+            \centering
+            \LARGE
+            \vspace{3mm}
+          \textit{approximations}\\
+            \vspace{3mm}
+        }};
+
+        \draw[->, very thick, draw=MonBleu] (MetaIn) -- (Meta.west);
+        \draw[->, very thick, draw=MonBleu] (Meta) -- (MetaOut.west);
+
+        \draw[->, very thick, draw=Orange!80] (MesIn) -- (Meta)
+        node [above, midway, sloped, Orange!80] {\large Design of Experiments};
+        \draw[->, very thick, draw=Orange!80] (MesOut)  -- (Meta);
+        %node [above, midway, sloped, Orange!80] {\large réponses};
+
+    \end{tikzpicture}
+    \end{figure}
+\end{frame}
+
 \begin{frame}
 \frametitle{Optimisation et métamodèle : ce qu'on est tenté de faire...}
 \begin{columns}[c]
@@ -338,41 +360,41 @@ $\Rightarrow$ C'est fini !
 \end{block}
 \end{frame}
 
-% %-----------------------------------------------------
-% \begin{frame}
-% \frametitle{Schéma général : métamodèle = guide}
-% 
-%    \begin{tikzpicture}[scale=1]
-%    \draw(6,2) rectangle (11,3);
-%    \draw(8.5,2.5) node{PX initial};
-%    
-%    \draw[<-,thick] (5,2.5)--(6,2.5);
-%    
-%    \draw(0,2) rectangle (5,3);
-%    \draw(2.5,2.5) node{Simulations};
-%    
-%    \draw[<-,thick] (2.5,1)--(2.5,2);
-%    
-%    \draw(0,0) rectangle (5,1);
-%    \draw(2.5,.5) node{Construction du métamodèle};
-%  \draw[<-,thick] (2.5,-1)--(2.5,0);
-%     \draw(0,-2) rectangle (5,-1);
-%    \draw(2.5,-1.5) node{Choix de la nouvelle xp};
-%  \draw[<-,thick] (2.5,-3)--(2.5,-2);
-%      \draw(0,-4) rectangle (5,-3);
-%    \draw(2.5,-3.5) node{Simulation};
-%   
-%   \draw[->,thick] (5,-3.5)--(6,-3.5);
-%   
-%    \draw(6,-4) rectangle (11.5,-3);
-%    \draw(8.75,-3.5) node{Enrichissement du métamodèle};
-%   \draw[-,thick] (8.75,-3)--(8.75,-1.5);
-%   \draw[<-,thick] (5,-1.5)--(8.75,-1.5);
-%  \end{tikzpicture}
-% \end{frame}
+% -----------------------------------------------------
+\begin{frame}
+\frametitle{Schéma général : métamodèle = guide}
+
+   \begin{tikzpicture}[scale=1]
+   \draw(6,2) rectangle (11,3);
+   \draw(8.5,2.5) node{PX initial};
+   
+   \draw[<-,thick] (5,2.5)--(6,2.5);
+   
+   \draw(0,2) rectangle (5,3);
+   \draw(2.5,2.5) node{Simulations};
+   
+   \draw[<-,thick] (2.5,1)--(2.5,2);
+   
+   \draw(0,0) rectangle (5,1);
+   \draw(2.5,.5) node{Construction du métamodèle};
+ \draw[<-,thick] (2.5,-1)--(2.5,0);
+    \draw(0,-2) rectangle (5,-1);
+   \draw(2.5,-1.5) node{Choix de la nouvelle xp};
+ \draw[<-,thick] (2.5,-3)--(2.5,-2);
+     \draw(0,-4) rectangle (5,-3);
+   \draw(2.5,-3.5) node{Simulation};
+  
+  \draw[->,thick] (5,-3.5)--(6,-3.5);
+  
+   \draw(6,-4) rectangle (11.5,-3);
+   \draw(8.75,-3.5) node{Enrichissement du métamodèle};
+  \draw[-,thick] (8.75,-3)--(8.75,-1.5);
+  \draw[<-,thick] (5,-1.5)--(8.75,-1.5);
+ \end{tikzpicture}
+\end{frame}
 
 %-----------------------------------------------------
-\subsection{Optimisation basée sur les modèles polynomiaux}
+% \subsection{Optimisation basée sur les modèles polynomiaux}
 %-----------------------------------------------------
 \begin{frame}
 \frametitle{Optimisation basée sur les modèles polynomiaux}
@@ -394,12 +416,12 @@ $\Rightarrow$ C'est fini !
 %-----------------------------------------------------
 \begin{frame}
 \frametitle{Itérations 3 à 7}
-\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs3.png}
-\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs4.png}
-\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs5.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.31\textwidth]{fig/prs3.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.31\textwidth]{fig/prs4.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.31\textwidth]{fig/prs5.png}
 \\
-\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs6.png}
-\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs7.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.31\textwidth]{fig/prs6.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.31\textwidth]{fig/prs7.png}
 \end{frame}
 %-----------------------------------------------------
 \begin{frame}
@@ -444,30 +466,30 @@ A chaque itération :
 %-----------------------------------------------------
 \begin{frame}
 \frametitle{Illustration (source : F. Vanden Berghen)}
-\includegraphics[width=.5\textwidth]{trm/Image2.png}
-\includegraphics[width=.5\textwidth]{trm/Image3.png}
+\includegraphics[width=.49\textwidth]{trm/Image2.png}
+\includegraphics[width=.49\textwidth]{trm/Image3.png}
 \end{frame}
 %-----------------------------------------------------
 \begin{frame}[noframenumbering]
 \frametitle{Illustration (source : F. Vanden Berghen)}
-\includegraphics[width=.5\textwidth]{trm/Image4.png}
-\includegraphics[width=.5\textwidth]{trm/Image5.png}
+\includegraphics[width=.49\textwidth]{trm/Image4.png}
+\includegraphics[width=.49\textwidth]{trm/Image5.png}
 \end{frame}
 %-----------------------------------------------------
 \begin{frame}[noframenumbering]
 \frametitle{Illustration (source : F. Vanden Berghen)}
-\includegraphics[width=.5\textwidth]{trm/Image6.png}
-\includegraphics[width=.5\textwidth]{trm/Image7.png}
+\includegraphics[width=.49\textwidth]{trm/Image6.png}
+\includegraphics[width=.49\textwidth]{trm/Image7.png}
 \end{frame}
 %-----------------------------------------------------
 \begin{frame}
-\frametitle{Avantages et inconvénients}
+\frametitle{}
 \begin{block}{Avantages}
 \begin{itemize}
  \item Garantie de convergence
  \item Méthodes assez parcimonieuses
  \item Robuste
- \item Accepte un assez grand nombre de variables
+ \item Accepte un très grand nombre de variables
 \end{itemize}
 \scriptsize{
  \begin{thebibliography}{1}
@@ -476,17 +498,19 @@ A chaque itération :
      Conn, Scheinberg, and Vicente
          \newblock Introduction to derivative-free optimization
          \newblock MPS-SIAM Series on Optimization (2009)
+          \bibitem{newuoa}
+          Powell
+         \newblock The NEWUOA software for unconstrained optimization without derivatives
+         \newblock Large-scale nonlinear optimization (2006)    
  \end{thebibliography}}
 \end{block}
 
-\begin{alertblock}{Méthode locale}
-\begin{itemize}
- \item Pas de métamodèle final utilisable globalement
- \item Proche des méthodes de gradient
-\end{itemize}
+\begin{alertblock}{Méthode locale (proche méthode de gradient)}
+Pas de métamodèle final utilisable globalement - mais gradient + hessien !
 \end{alertblock}
 \end{frame}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[EG0]{Kriging-based optimization (EGO)}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
 \textbf{Global optimization} methods are a trade-off between
