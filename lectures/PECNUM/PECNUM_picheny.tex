@@ -1,0 +1,61 @@
+\documentclass[10pt]{beamer}
+\usetheme{Pecnum}
+\usepackage{amsmath,amssymb}
+\usepackage{colortbl}
+%\usepackage{ucs}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{amsfonts,amssymb,amsmath,amsthm,amsbsy}
+\usepackage{placeins}
+\usepackage{color}
+\usepackage{tikz}
+\usepackage{bbm}
+
+\setbeamercovered{dynamic}
+\setbeamercolor{postit}{bg=pecnumbleusombre!30}
+\title{Stratégies séquentielles}
+\author{Victor Picheny}
+\date{\'Ecole Centrale de Lyon, 22 mai 2015}
+\institute{\includegraphics[scale=.15]{logo.png}}
+
+\begin{document}
+\begin{frame}
+    	\maketitle
+\end{frame}
+
+%-----------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-----------------------------------------------------------------
+\section{Introduction}
+\input{intro.tex}
+%-----------------------------------------------------------------
+\section[Prédiction]{Planification adaptative pour la prédiction}
+%-----------------------------------------------------------------
+\begin{frame}{Plan de l'exposé}
+\tableofcontents
+\end{frame}
+%-----------------------------------------------------------------
+\input{prediction.tex}
+%-----------------------------------------------------------------
+\section[Analyse de risque]{Planification adaptative pour l'analyse de risque}
+%-----------------------------------------------------
+\begin{frame}{Plan de l'exposé}
+\tableofcontents
+\end{frame}
+%-----------------------------------------------------------------
+\input{risque.tex}
+%-----------------------------------------------------------------
+\section[Optimisation]{Planification adaptative pour l'optimisation et la calibration}
+\begin{frame}{Plan de l'exposé}
+\tableofcontents
+\end{frame}
+% %-----------------------------------------------------------------
+\input{optim.tex}
+\input{extension.tex}
+%-----------------------------------------------------------------
+\section[Conclusion]{Conclusion}
+%-----------------------------------------------------
+\input{conclusion.tex}
+%-----------------------------------------------------
+% \input{annexe.tex}
+\end{document}

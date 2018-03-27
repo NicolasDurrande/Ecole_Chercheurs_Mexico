@@ -1,0 +1,334 @@
+\documentclass[10pt]{beamer}
+\usetheme{Pecnum}
+\usepackage{amsmath,amssymb}
+\usepackage{colortbl}
+%\usepackage{ucs}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsbsy}
+\usepackage{placeins}
+\usepackage{color}
+\usepackage{tikz}
+\setbeamercovered{dynamic}
+
+\title{Stratégies séquentielles}
+\author{Victor Picheny}
+\date{\'Ecole Centrale de Lyon, 22 mai 2015}
+\institute{\includegraphics[scale=.15]{logo.png}}
+
+\begin{document}
+\begin{frame}
+    	\maketitle
+\end{frame}
+
+%-----------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-----------------------------------------------------------------
+\section{Introduction}
+%-----------------------------------------------------------------
+\begin{frame}{Cadre de l'exposé}
+ \includegraphics[width=\textwidth]{fig/schemaSeb.png}
+\end{frame}
+
+%-----------------------------------------------------------------
+\begin{frame}{Pourquoi une stratégie séquentielle ?}
+\begin{block}{``Budget'' ($=N$) nécessaire difficile à estimer}
+\begin{itemize}
+  \item Premier plan raisonnable
+  \item Enrichissement jusqu'à satisfaction
+\end{itemize}
+\end{block}
+
+\begin{alertblock}{Suite d'une première étude}
+\begin{itemize}
+\item Premier plan $\Rightarrow$ métamodèle grossier $\Rightarrow$ analyse de sensibilité $\Rightarrow$ réduction de dimension
+\item Ajout d'expériences pour obtenir un métamodèle final précis
+\end{itemize}
+\end{alertblock}
+
+\begin{exampleblock}{Planification ciblée $\Leftrightarrow$ utilisation du métamodèle}
+\begin{itemize}
+\item Propagation d'incertitudes
+\item Optimisation / calibration
+\end{itemize}
+\end{exampleblock}
+
+\end{frame}
+
+%-----------------------------------------------------------------
+\begin{frame}{Objectifs}
+\begin{block}{Cas 1 et 2 : métamodèle globalement précis}
+Utilisation générique $\Rightarrow$ le métamodèle doit remplacer fidèlement le modèle coûteux
+\end{block}
+
+\begin{exampleblock}{Cas 3 : métamodèle = outil d'extraction d'information}
+Intérêt guidé par la valeur des observations
+\begin{itemize}
+ \item optimisation : recherche de minimum / maximum
+ \item analyse de risque : dépassement de seuil
+\end{itemize}
+Une bonne précision partout n'est pas nécessaire !
+\end{exampleblock}
+\end{frame}
+%-----------------------------------------------------------------
+\begin{frame}{Plan de l'exposé}
+\tableofcontents
+\end{frame}
+
+%-----------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-----------------------------------------------------------------
+\section[Prédiction]{Planification adaptative pour la prédiction}
+%-----------------------------------------------------------------
+\begin{frame}{Problématique}
+\begin{block}{Titre bloc}
+\begin{itemize}
+\item Contenu bloc
+\end{itemize}
+\end{block}
+
+\begin{alertblock}{Bloc 2}
+\begin{itemize}
+\item Contenu 2
+\end{itemize}
+\end{alertblock}
+
+\begin{exampleblock}{Bloc 3}
+\begin{enumerate}
+\item Premièrement
+\item Deuxièmement
+\end{enumerate}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Approches géométriques vs. métamodèles}
+
+\begin{block}{Approches ``purement'' géométriques}
+  \begin{itemize}
+  \item Structures ``fractales'' (OA)
+  \item Plans factoriels fractionnaires
+  \item Suites à faible discrépance
+  \item Critères \textit{maximin}, \textit{minimax}
+ \end{itemize}
+$\Rightarrow$ c.f. cours de H. Monod et L. Pronzato
+\end{block}
+
+\begin{alertblock}{Ici : plans séquentiels \textit{orientés modèle}}
+ Le métamodèle sert de guide pour choisir les nouvelles observations.
+\end{alertblock}
+\end{frame}
+%-----------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-----------------------------------------------------------------
+\section[Optimisation]{Planification adaptative pour l'optimisation et la calibration}
+\begin{frame}{Contexte}
+
+\end{frame}
+
+%-----------------------------------------------------
+\subsection{Optimisation et métamodèles}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Ce qu'on est tenté de faire...}
+\begin{columns}[l]
+ \begin{column}{.51\textwidth}
+  
+\begin{block}{``Le métamodèle donne l'optimum''}
+ \begin{itemize}
+  \item On cherche le minimum $x^*$ sur le métamodèle
+  \item On évalue le vrai $y(x^*)$ sur le simulateur
+ \end{itemize}
+$\Rightarrow$ C'est fini !
+\end{block}
+
+\begin{block}{Répartition de l'effort}
+ \begin{itemize}
+  \item Plan initial : 49 expériences
+  \item 98\% exploration, 2\% exploitation
+ \end{itemize}
+\end{block}
+ \end{column}
+ \begin{column}{.49\textwidth}
+  \includegraphics[width=\textwidth]{fig/exoptim1.pdf}
+ \end{column}
+\end{columns}
+\vspace{1mm}
+\centering
+\textcolor{red}{Que faire si $x^*$ n'est pas bon ?}
+\end{frame}
+
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Ce qu'il faut faire}
+\begin{block}{Si le budget est fixe}
+ \begin{itemize}
+  \item On divise le budget en 2
+  \item Budget 1 : plan initial (LHS)
+  \item Budget 2 : optimisation
+ \end{itemize}
+\end{block}
+
+\begin{block}{Utilisation \textbf{séquentielle} du métamodèle}
+ \begin{itemize}
+  \item Métamodèle initial : \textit{a priori} peu précis
+  \item Le métamodèle sert à \textbf{choisir} pour les nouvelles observations
+  \item A chaque nouvelle observation : amélioration du métamodèle
+ \end{itemize}
+\end{block}
+\end{frame}
+
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Schéma général : métamodèle = guide}
+
+   \begin{tikzpicture}[scale=1]
+   \draw(6,2) rectangle (11,3);
+   \draw(8.5,2.5) node{PX initial};
+   
+   \draw[<-,thick] (5,2.5)--(6,2.5);
+   
+   \draw(0,2) rectangle (5,3);
+   \draw(2.5,2.5) node{Simulations};
+   
+   \draw[<-,thick] (2.5,1)--(2.5,2);
+   
+   \draw(0,0) rectangle (5,1);
+   \draw(2.5,.5) node{Construction du métamodèle};
+ \draw[<-,thick] (2.5,-1)--(2.5,0);
+    \draw(0,-2) rectangle (5,-1);
+   \draw(2.5,-1.5) node{Choix de la nouvelle xp};
+ \draw[<-,thick] (2.5,-3)--(2.5,-2);
+     \draw(0,-4) rectangle (5,-3);
+   \draw(2.5,-3.5) node{Simulation};
+  
+  \draw[->,thick] (5,-3.5)--(6,-3.5);
+  
+   \draw(6,-4) rectangle (11.5,-3);
+   \draw(8.75,-3.5) node{Enrichissement du métamodèle};
+  \draw[-,thick] (8.75,-3)--(8.75,-1.5);
+  \draw[<-,thick] (5,-1.5)--(8.75,-1.5);
+ \end{tikzpicture}
+\end{frame}
+
+%-----------------------------------------------------
+\subsection{Optimisation basée sur les modèles polynomiaux}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Optimisation basée sur les modèles polynomiaux}
+\begin{block}{Principe}
+ \begin{itemize}
+  \item On construit une surface de réponse $y = \beta_0 + \beta_1 x + \beta_2 x^2$
+  \item On cherche le point qui minimise la surface de réponse
+  \item On ajoute ce point
+  \item On met à jour la surface de réponse
+  \item On recommence...
+ \end{itemize}
+\end{block}
+
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.37\paperwidth]{fig/prs1.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.37\paperwidth]{fig/prs2.png}
+\end{frame}
+
+%-----------------------------------------------------
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Itérations 3 à 7}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs3.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs4.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs5.png}
+\\
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs6.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs7.png}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Optimisation basée sur les modèles polynomiaux}
+\begin{block}{Problème : modèle ``rigide''}
+Le modèle ne s'ajuste pas aux données : 
+$ Y = \mathbf{X} \beta + \epsilon $
+
+Pas de convergence vers un modèle précis, même localement
+\end{block}
+
+\begin{exampleblock}{Solutions}
+\begin{enumerate}
+ \item Augmenter le dégré du polynôme \\
+ \textcolor{red}{$\Rightarrow$ risque de surapprentissage \& d'instabilité !}
+ \item Supprimer des points \\
+ $\Rightarrow$ méthode \textbf{de région de confiance}
+\end{enumerate}
+\end{exampleblock}
+\end{frame}
+
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Régions de confiance : principe}
+\begin{block}{Modèle quadratique ``creux''}
+\begin{itemize}
+ \item Valide à l'intérieur d'une région de confiance (petite)
+ \item Construit uniquement avec les points à l'intérieur de la région
+ \item Selon les valeurs des simulations, on modifie la taille de la région
+\end{itemize}
+\end{block}
+
+\begin{block}{Gestion de la région de confiance}
+A chaque itération :
+\begin{itemize}
+ \item $\hat y (x^*)$ bon $\Rightarrow$ confiance dans le modèle : on augmente la taille
+ \item $\hat y (x^*)$ mauvais $\Rightarrow$ modèle peu fiable : on diminue la taille
+\end{itemize}
+\end{block}
++ beaucoup de règles pour sélectionner les points et enrichir le plan d'expériences
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Illustration (source : F. Vanden Berghen)}
+\includegraphics[width=.5\textwidth]{trm/Image2.png}
+\includegraphics[width=.5\textwidth]{trm/Image3.png}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Illustration (source : F. Vanden Berghen)}
+\includegraphics[width=.5\textwidth]{trm/Image4.png}
+\includegraphics[width=.5\textwidth]{trm/Image5.png}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Illustration (source : F. Vanden Berghen)}
+\includegraphics[width=.5\textwidth]{trm/Image6.png}
+\includegraphics[width=.5\textwidth]{trm/Image7.png}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Avantages et inconvénients}
+\begin{block}{Avantages}
+\begin{itemize}
+ \item Garantie de convergence
+ \item Méthodes assez parcimonieuses
+ \item Robuste
+ \item Accepte un assez grand nombre de variables
+\end{itemize}
+\scriptsize{
+ \begin{thebibliography}{1}
+\beamertemplatearticlebibitems
+     \bibitem{conn}
+     Conn, Scheinberg, and Vicente
+         \newblock Introduction to derivative-free optimization
+         \newblock MPS-SIAM Series on Optimization (2009)
+ \end{thebibliography}}
+\end{block}
+
+\begin{alertblock}{Où est passé le compromis exploration / intensification ?}
+Méthodes d'optimisation locale, proche des méthodes de gradient
+\end{alertblock}
+\end{frame}
+
+%-----------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-----------------------------------------------------------------
+\section[Analyse de risque]{Planification adaptative pour l'analyse de risque}
+\end{document}
