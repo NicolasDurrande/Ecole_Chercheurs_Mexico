@@ -106,6 +106,5 @@ candidate <- data.frame(randomLHS(100,5))
 colnames(X1) <- colnames(X2) <- colnames(candidate) <- colnames(m@X)
 res <- sobolGP(model = m, type="UK", MCmethod="soboljansen",
                X1=X1, X2=X2, nsim = 20, nboot=50, sequential = TRUE, candidate=candidate)
-pdf("sobolGP.pdf")
+
 plot(res)
-dev.off()
