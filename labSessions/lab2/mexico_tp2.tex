@@ -37,13 +37,19 @@ Le script (très) incomplet \texttt{lab2\_script.R} vous est fourni pour vous ai
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Construction d'un modèle 1D}
 
-\paragraph{Q1.} Un jeu de données jouet vous est fourni dans le fichier \texttt{toy\_data.Rdata}. Charger le à l'aide de la fonction \texttt{load} et représenter graphiquement \texttt{Y} contre \texttt{X}. Que pouvez-vous intuiter de la régularité de la fonction $f$ ?
+\paragraph{Q1.} Un premier jeu de données jouet vous est fourni dans le fichier \texttt{toy\_data.Rdata}: 10 observations $Y$ qui dépendent d'un seul paramètre $X$. 
+Le charger \texttt{load(toy\_data.Rdata)} et représenter graphiquement \texttt{Y} contre \texttt{X}. Que pouvez-vous intuiter de la régularité de la fonction $f$ ?
 
-\paragraph{Q2.} Quelques lignes de codes vous sont données pour générer des trajectoires non conditionelles à partir du package DiceKriging. Modifier la valeur des paramètres \texttt{covtype}, \texttt{coef.trend}, \texttt{coef.var} et \texttt{coef.cov} afin de comprendre l'influence de ces paramètres (il n'est pas interdit de consulter la documentation !). Trouver un jeu de paramètre qui vous semble adapté au jeu de données.
+\paragraph{Q2.} Quelques lignes de codes vous sont données pour générer des trajectoires non conditionelles à partir du package DiceKriging. Ce code construit d'abord un modèle de krigeage \texttt{m} à l'aide de la fonction \texttt{km},
+génère des trajectoires (fonction \texttt{simulate}) sur une grille (\texttt{x}). Modifier la valeur des paramètres \texttt{covtype}, \texttt{coef.trend}, \texttt{coef.var} et \texttt{coef.cov} 
+afin de comprendre l'influence de ces paramètres (il n'est pas interdit de consulter la documentation !). Attention aux intervalles de variations : \texttt{coef.trend} influe sur la moyenne des trajectoires, \texttt{coef.var} sur leur variance
+et \texttt{coef.cov} sur leur régularité (il correspond à une distance sur $x$). Trouver un jeu de paramètre qui vous semble adapté au jeu de données.
 
-\paragraph{Q3.} Simuler et représenter des trajectoires conditionnelles (option \texttt{cond} de la fonction simulate). Tracer la moyenne et des intervalles de confiance à l'aide de la fonction \texttt{sectionview} du package \texttt{DiceView}.
+\paragraph{Q3.} Simuler et représenter des trajectoires conditionnelles (même script mais option \texttt{cond} de la fonction \texttt{simulate}). Tracer sur le même graphique les observations (\texttt{points(X,Y)}) ; qu'observez-vous ?
+Tracer la moyenne et des intervalles de confiance à l'aide de la fonction \texttt{sectionview} du package \texttt{DiceView}.
 
-\paragraph{Q4.} Changer les paramètres d'appel de la fonction \texttt{km} afin d'estimer les paramètres de covariance par maximum de vraisemblance. Vous pouvez ensuite utiliser la commande \texttt{print(m)} pour afficher des détails sur le modèle. Les paramètres trouvés sont-ils proche de ceux que vous aviez intuités ?
+\paragraph{Q4.} Changer les paramètres d'appel de la fonction \texttt{km} afin d'estimer les paramètres de covariance par maximum de vraisemblance. 
+Vous pouvez ensuite utiliser la commande \texttt{print(m)} pour afficher des détails sur le modèle. Les paramètres trouvés sont-ils proche de ceux que vous aviez intuités ?
 
 \paragraph{Q5.} La fonction \texttt{leaveOneOut.km} est bien pratique pour calculer les prédictions du modèle aux points du plan d'expérience en utilisant tous les points du plan sauf celui où l'on effectue la prédiction. Utiliser ce vecteur de prédiction pour calculer les résidus standardisés (erreur de prédiction divisée par l'écart type de prédiction). Les comparer avec une distribution normale centrée réduite. Le résultat vous parrait-il satisfaisant ?  
 
