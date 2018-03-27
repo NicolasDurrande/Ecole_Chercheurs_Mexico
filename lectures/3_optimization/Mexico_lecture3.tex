@@ -49,301 +49,6 @@
   \titlepage
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Kernel Design}
-\subsection{}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-\structure{Making new from old:}
-Many operations can be applied to psd functions while retaining this property
-\begin{block}{}
-Kernels can be:
-\begin{itemize}
-  \item Summed together
-  \begin{itemize}
-    \item On the same space $k(x,y) = k_1(x,y) + k_2(x,y)$
-    \item On the tensor space $k(x,y) = k_1(x_1,y_1) + k_2(x_2,y_2)$
-  \end{itemize}
-  \item Multiplied together
-  \begin{itemize}
-    \item On the same space $k(x,y) = k_1(x,y) \times k_2(x,y)$
-    \item On the tensor space $k(x,y) = k_1(x_1,y_1) \times k_2(x_2,y_2)$
-  \end{itemize}
-  \item Composed with a function
-  \begin{itemize}
-    \item $k(x,y) = k_1(f(x),f(y))$
-  \end{itemize}
-\end{itemize}
-\end{block}
-\begin{center}
-\alert{How can this be useful?}
-\end{center}
-\end{frame}
-
-% \subsection{Sum of kernels}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Sum of kernels over the same space }
-\begin{example}[The Mauna Loa observatory dataset]
-This famous dataset compiles the monthly $CO_2$ concentration in Hawaii since 1958.
-\begin{center}
-\includegraphics[height=4.5cm]{figures/python/CO2-data}
-\end{center}
-Let's try to predict the concentration for the next 20 years.
-\end{example}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Sum of kernels over the same space }
-We first consider a squared-exponential kernel:
-$$ \displaystyle k_{se}(x,y) = \sigma^2\exp \left(-\frac{(x-y)^2}{\theta^2} \right)$$
-\begin{center}
-\includegraphics[height=3.7cm]{figures/python/CO2-rbfa} \quad \includegraphics[height=3.7cm]{figures/python/CO2-rbfb}
-\end{center}
-\begin{block}{}
-\centering
-\alert{The results are terrible!}
-\end{block}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Sum of kernels over the same space }
-What happen if we sum both kernels?
-\begin{equation*}
-k(x,y) = k_{se1}(x,y) + k_{se2}(x,y)
-\end{equation*}
-\pause
-\begin{center}
-\vspace{-8mm} \includegraphics[height=4.5cm]{figures/python/CO2-rbfab}
-\end{center}
-%\vspace{1mm}
-\begin{block}{}
-\centering
-\alert{The model is drastically improved!}
-\end{block}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Sum of kernels over the same space }
-We can try the following kernel:
-\begin{equation*}
-k(x,y) = \sigma_0^2  x^2 y^2 + k_{se1}(x,y) + k_{se2}(x,y) + k_{per}(x,y)
-\end{equation*}
-\pause
-\begin{center}
-\vspace{-8mm}  \includegraphics[height=4.5cm]{figures/python/CO2-rbfabpq}
-\end{center}
-\begin{block}{}
-\centering
-\alert{Once again, the model is significantly improved.}
-\end{block}
-\end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Sum of kernels over tensor space}
-\begin{block}{Property}
-\begin{equation*}
-k(x,y) = k_1(x_1,y_1) +  k_2(x_2,y_2)
-\end{equation*}
-is valid covariance structure.\\
-\begin{columns}[c]
-\begin{column}{3cm}
-\includegraphics[width=3cm]{figures/python/newfromold-sum2-k1}
-\end{column}
-\begin{column}{2mm}
-$+$
-\end{column}
-\begin{column}{3cm}
-\includegraphics[width=3cm]{figures/python/newfromold-sum2-k2}
-\end{column}
-\begin{column}{2mm}
-$=$
-\end{column}
-\begin{column}{3cm}
-\includegraphics[width=3cm]{figures/python/newfromold-sum2-k12}
-\end{column}
-\end{columns}
-\vspace{4mm}
-\end{block}
-\structure{Remark:}
-From a GP point of view, $k$ is the kernel of
-$$Z(x) = Z_1(x_1) + Z_2(x_2)$$
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Sum of kernels over tensor space}
-We can have a look at a few sample paths from $Z$:
-\begin{center}
-\includegraphics[width=3.5cm]{figures/python/newfromold-sum2-traj124} \includegraphics[width=3.5cm]{figures/python/newfromold-sum2-traj121} \includegraphics[width=3.5cm]{figures/python/newfromold-sum2-traj123} % \includegraphics[width=3.5cm]{figures/newfromold-sum2-traj122}
-\end{center}
-\qquad \alert{$\Rightarrow$ They are additive (up to a modification)}\\ \ \\
-Tensor Additive kernels are very useful for
-\begin{itemize}
-  \item Approximating additive functions
-  \item Building models over high dimensional inputs spaces
-\end{itemize}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Product over the same space}
-\begin{block}{Property}
-\begin{equation*}
-k(x,y) = k_1(x,y) \times  k_2(x,y)
-\end{equation*}
-is valid covariance structure.
-\end{block}
-%\vspace{10mm}
-\begin{example}
-We consider the product of a squared exponential with a cosine:
-\begin{columns}[c]
-\begin{column}{3cm}
-\includegraphics[width=3cm]{figures/python/newfromold-pa.pdf}
-\end{column}
-\begin{column}{2mm}
-$\times$
-\end{column}
-\begin{column}{3cm}
-\includegraphics[width=3cm]{figures/python/newfromold-pb.pdf}
-\end{column}
-\begin{column}{2mm}
-$=$
-\end{column}
-\begin{column}{3cm}
-\includegraphics[width=3cm]{figures/python/newfromold-pab1.pdf}
-\end{column}
-\end{columns}
-\vspace{5mm}
-\end{example}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Product over the tensor space}
-\begin{block}{Property}
-\begin{equation*}
-k(x,y) = k_1(x_1,y_1) \times k_2(x_2,y_2)
-\end{equation*}
-is valid covariance structure.
-\end{block}
-%\vspace{10mm}
-\begin{example}
-We multiply 2 squared exponential kernel
-\begin{columns}[c]
-\begin{column}{3cm}
-\includegraphics[width=3cm]{figures/python/newfromold-sum2-k1}
-\end{column}
-\begin{column}{2mm}
-$\times $
-\end{column}
-\begin{column}{3cm}
-\includegraphics[width=3cm]{figures/python/newfromold-sum2-k2}
-\end{column}
-\begin{column}{2mm}
-$=$
-\end{column}
-\begin{column}{3cm}
-\includegraphics[width=3cm]{figures/python/newfromold-prod2-k12}
-\end{column}
-\end{columns}
-\vspace{5mm}
-Calculation shows this is the usual 2D squared exponential kernel.
-\end{example}
-\end{frame}
-
-% \subsection{Composition with a function}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Composition with a function}
-\begin{block}{Property}
-Let $k_1$ be a kernel over $D_1 \times D_1$ and $f$ be an arbitrary function $D \rightarrow D_1$, then
-\begin{equation*}
-k(x,y) = k_1(f(x),f(y))
-\end{equation*}
-is a kernel over $D \times D $.\\
-\small
-\textbf{proof}\\
-\begin{equation*}
-\sum \sum a_i  a_j k(x_i,x_j) = \sum \sum a_i a_j k_1(\underbrace{f(x_i)}_{y_i},\underbrace{f(x_j)}_{y_j}) \geq 0
-\end{equation*}
-\end{block}
-\vspace{5mm}
-\structure{Remarks:}
-\begin{itemize}
-\item $k$ corresponds to the covariance of $Z(x) = Z_1(f(x))$
-\item This can be seen as a (non-linear) rescaling of the input space
-\end{itemize}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-\begin{example}
-We consider $f(x) = \frac1x$ and a Mat\'ern 3/2 kernel $k_1(x,y) = (1 + |x-y|) e^{-|x-y|}$.\\ \vspace{5mm}
-\textbf{We obtain:}
-\begin{columns}[c]
-\begin{column}{5cm}
-\begin{center}
-Kernel
-\includegraphics[width=4cm]{figures/python/newfromold-compfunc-k}
-\end{center}
-\end{column}
-\begin{column}{5cm}
-\begin{center}
-Sample paths
-\includegraphics[width=4cm]{figures/python/newfromold-compfunc-traj}
-\end{center}
-\end{column}
-\end{columns}
-\end{example}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-\structure{All these transformations can be combined!}
-\begin{example}
-$k(x,y) = f(x)f(y)k_1(x,y)$ is a valid kernel.\\
-\vspace{0.5cm}
-This can be illustrated with $f(x) = \frac1x$ and $k_1(x,y) = (1 + |x-y|) e^{-|x-y|}$:\\
-\begin{columns}[c]
-\begin{column}{5cm}
-\begin{center}
-Kernel
-\includegraphics[width=4cm]{figures/python/newfromold-prodfunc-k}
-\end{center}
-\end{column}
-\begin{column}{5cm}
-\begin{center}
-Sample paths
-\includegraphics[width=4cm]{figures/python/newfromold-prodfunc-traj}
-\end{center}
-\end{column}
-\end{columns}
-\end{example}
-\end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-\begin{exampleblock}{Example}
-\begin{center}
-\includegraphics[height=4cm]{figures/piton_fournaise_5dike_intrusions_98_00} 
-\end{center}
-\end{exampleblock}
-\alert{$\Rightarrow$ R demo}
-\end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Other kernel design methods}
-There are two other popular methods for kernel design:
-\begin{itemize}
-    \item Bochner Theorem\\
-There is an equivalence between positive measures and stationnary positive definite functions. 
-    \item Linear operators\\
-If the function to approximate has particular properties that can be obtained via a linear transform, it is possible to build a GP with the wanted properties. For example, one can build symmetric GPs or GPs with integral equal to zero.
-\end{itemize}
-\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -446,6 +151,340 @@ In the end, we hope that:
 In practice, it is risky to take decisions based only on the model...\\
 \vspace{3mm}
 On the other hand, the model can be used to guide us in the search for the optimum.
+\end{frame}
+
+\begin{frame}{Contexte}
+\begin{block}{Expériences numériques comme aide à la conception / décision}
+ \begin{itemize}
+  \item Réponse du code de calcul = performance ou coût
+  \item Recherche des paramètres optimaux :
+  $$x^* = \arg \min cout(x) \text{ ou } \arg \max {perf(x)}$$
+  \item L'optimisation nécessite beaucoup d'appels au code
+  \item Métamodèle : solution naturelle
+ \end{itemize}
+\end{block}
+
+\begin{exampleblock}{Lien avec la problématique précédente}
+Le métamodèle doit être précis seulement dans les régions importantes (proche de l'extremum)
+$\Rightarrow$ répartition des expériences ``ciblée''
+\end{exampleblock}
+
+\begin{alertblock}{Démarche nécessairement séquentielle}
+Il faut faire des expériences pour connaître les régions cibles !
+\end{alertblock}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+  \frametitle{Planification d'expériences et optimisation globale}
+  \begin{block}{Optimisation locale}
+Amélioration depuis un point initial
+  \end{block}
+
+  \begin{block}{Optimisation globale : le \textbf{compromis exploration / intensification}}
+  \begin{itemize}
+   \item Exploration : recherche partout dans l'espace pour ne pas rater la zone optimale 
+   \item Intensification : une fois une zone identifiée : on recherche le minimum local
+  \end{itemize}
+  \end{block}
+  
+\begin{exampleblock}{Dans un contexte de planification d'expériences}
+  \begin{itemize}
+   \item Exploration : remplissage d'espace
+   \item Intensification : ``ciblage''
+  \end{itemize}
+\end{exampleblock}
+  
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+  \frametitle{Introduction à l'optimisation globale : l'algorithme DIRECT}
+  Garanti sans métamodèle !
+  \begin{block}{DIRECT : DIviding RECTangles}
+  \begin{itemize}
+   \item Découpage de l'espace en (hyper)rectangles
+   \item Un échantillon au centre de chaque rectangle
+   \item On divise les rectangles les plus ``intéressants'' :
+   \begin{itemize}
+     \item soit les plus grands (exploration)
+     \item soit ceux qui ont une valeur au centre basse (intensification)
+   \end{itemize}
+   \item Pour diviser : ajout de 2 points, division en 3
+  \end{itemize}
+  \end{block}
+  \scriptsize{
+ \begin{thebibliography}{7}
+\beamertemplatearticlebibitems
+%\beamertemplatebookbibitems
+     \bibitem{direct}
+     D.~Jones, C.~Perttunen, B.~Stuckman (1993)
+         \newblock Lipschitzian optimization without the Lipschitz constant
+         \newblock Journal of Optimization Theory and Applications 79(1), 157-181
+ \end{thebibliography}
+}
+\normalsize
+%   \begin{block}{Compromis exploration / intensification}
+% Pour (presque) \textbf{chaque} taille de rectangle, on divise celui qui a la meilleure valeur observée
+%   \end{block}
+%   
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Exemple en dimension 2}
+%   \includegraphics[width=.45\paperwidth]{fig/direct1.png}
+%   \\
+\begin{itemize}
+ \item Départ : 3 points équirépartis dans une direction aléatoire
+ \item On divise le rectangle ayant la meilleure observations
+\end{itemize}
+
+  \includegraphics[width=.45\textwidth]{fig/direct1.pdf} \hspace{5mm}
+\includegraphics[width=.45\textwidth]{fig/direct1bis.pdf}
+  \end{frame}
+
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Exemple en dimension 2}
+%   \includegraphics[width=.45\paperwidth]{fig/direct1.png}
+%   \\
+  \includegraphics[width=.9\textwidth]{fig/direct2.png}
+\end{frame}
+
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Après 191 évaluations}
+\begin{itemize}
+ \item Echantillonnage intense dans la zone de l'optimum
+ \item Bonne exploration 
+\end{itemize}
+
+
+
+\begin{columns}
+ \begin{column}{80mm}
+ \includegraphics[width=\textwidth]{fig/direct3.png}  
+ \end{column}
+ \begin{column}{40mm}
+   \scriptsize{Source figures :
+ \begin{thebibliography}{1}
+\beamertemplatearticlebibitems
+     \bibitem{fin}
+     D. E. Finkel
+         \newblock DIRECT Optimization Algorithm User Guide (2003)
+ \end{thebibliography}}
+ \end{column}
+\end{columns}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Intêret et limites}
+\begin{itemize}
+ \item[$+$] Exploration de tout l'espace de recherche
+ \item[$+$] Stratégie robuste
+ \item[$-$] Limité aux petites dimensions
+ \item[$-$] Exploitation limitée de l'information
+\end{itemize}
+\vspace{5mm}
+$\Rightarrow$ même principe général, avec un métamodèle ?
+\end{frame}
+%-----------------------------------------------------
+% \subsection{Optimisation et métamodèles}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Optimisation et métamodèle : ce qu'on est tenté de faire...}
+\begin{columns}[c]
+ \begin{column}{.51\textwidth}
+  
+\begin{block}{``Le métamodèle donne l'optimum''}
+ \begin{itemize}
+  \item On cherche le minimum $x^*$ sur le métamodèle
+  \item On évalue le vrai $y(x^*)$ sur le simulateur
+ \end{itemize}
+$\Rightarrow$ C'est fini !
+\end{block}
+
+\begin{block}{Répartition de l'effort}
+ \begin{itemize}
+  \item Plan initial : 49 expériences
+  \item 98\% exploration, 2\% exploitation
+ \end{itemize}
+\end{block}
+ \end{column}
+ \begin{column}{.49\textwidth}
+  \includegraphics[width=\textwidth]{fig/exoptim1.pdf}
+ \end{column}
+\end{columns}
+\vspace{1mm}
+\centering
+\alert{Que faire si $x^*$ n'est pas bon ?}
+\end{frame}
+
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Optimisation et métamodèle : ce qu'il faut faire}
+\begin{block}{Si le budget est fixe}
+ \begin{itemize}
+  \item On divise le budget en 2
+  \item Budget 1 : plan initial (LHS)
+  \item Budget 2 : optimisation
+ \end{itemize}
+\end{block}
+
+\begin{block}{Utilisation \textbf{séquentielle} du métamodèle}
+ \begin{itemize}
+  \item Métamodèle initial : \textit{a priori} peu précis
+  \item Le métamodèle sert à \textbf{choisir} pour les nouvelles observations
+  \item A chaque nouvelle observation : amélioration du métamodèle
+ \end{itemize}
+\end{block}
+\end{frame}
+
+% %-----------------------------------------------------
+% \begin{frame}
+% \frametitle{Schéma général : métamodèle = guide}
+% 
+%    \begin{tikzpicture}[scale=1]
+%    \draw(6,2) rectangle (11,3);
+%    \draw(8.5,2.5) node{PX initial};
+%    
+%    \draw[<-,thick] (5,2.5)--(6,2.5);
+%    
+%    \draw(0,2) rectangle (5,3);
+%    \draw(2.5,2.5) node{Simulations};
+%    
+%    \draw[<-,thick] (2.5,1)--(2.5,2);
+%    
+%    \draw(0,0) rectangle (5,1);
+%    \draw(2.5,.5) node{Construction du métamodèle};
+%  \draw[<-,thick] (2.5,-1)--(2.5,0);
+%     \draw(0,-2) rectangle (5,-1);
+%    \draw(2.5,-1.5) node{Choix de la nouvelle xp};
+%  \draw[<-,thick] (2.5,-3)--(2.5,-2);
+%      \draw(0,-4) rectangle (5,-3);
+%    \draw(2.5,-3.5) node{Simulation};
+%   
+%   \draw[->,thick] (5,-3.5)--(6,-3.5);
+%   
+%    \draw(6,-4) rectangle (11.5,-3);
+%    \draw(8.75,-3.5) node{Enrichissement du métamodèle};
+%   \draw[-,thick] (8.75,-3)--(8.75,-1.5);
+%   \draw[<-,thick] (5,-1.5)--(8.75,-1.5);
+%  \end{tikzpicture}
+% \end{frame}
+
+%-----------------------------------------------------
+\subsection{Optimisation basée sur les modèles polynomiaux}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Optimisation basée sur les modèles polynomiaux}
+\begin{block}{Principe}
+ \begin{itemize}
+  \item On construit une surface de réponse $y = \beta_0 + \beta_1 x + \beta_2 x^2$
+  \item On cherche le point qui minimise la surface de réponse
+  \item On ajoute ce point
+  \item On met à jour la surface de réponse
+  \item On recommence...
+ \end{itemize}
+\end{block}
+
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.37\paperwidth]{fig/prs1.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.37\paperwidth]{fig/prs2.png}
+\end{frame}
+
+%-----------------------------------------------------
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Itérations 3 à 7}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs3.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs4.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs5.png}
+\\
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs6.png}
+\includegraphics[trim = 10mm 20mm 10mm 10mm, clip, width=.3\paperwidth]{fig/prs7.png}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Optimisation basée sur les modèles polynomiaux}
+\begin{block}{Problème : modèle ``rigide''}
+Le modèle ne s'ajuste pas aux données : 
+$ Y = \mathbf{X} \beta + \epsilon $
+
+Pas de convergence vers un modèle précis, même localement
+\end{block}
+
+\begin{exampleblock}{Solutions}
+\begin{enumerate}
+ \item Augmenter le dégré du polynôme \\
+ \textcolor{red}{$\Rightarrow$ risque de surapprentissage \& d'instabilité !}
+ \item Supprimer des points \\
+ $\Rightarrow$ méthode \textbf{de région de confiance}
+\end{enumerate}
+\end{exampleblock}
+\end{frame}
+
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Régions de confiance : principe}
+\begin{block}{Modèle quadratique ``creux''}
+\begin{itemize}
+ \item Valide à l'intérieur d'une région de confiance (petite)
+ \item Construit uniquement avec les points à l'intérieur de la région
+ \item Selon les valeurs des simulations, on modifie la taille de la région
+\end{itemize}
+\end{block}
+
+\begin{block}{Gestion de la région de confiance}
+A chaque itération :
+\begin{itemize}
+ \item $\hat y (x^*)$ bon $\Rightarrow$ confiance dans le modèle : on augmente la taille
+ \item $\hat y (x^*)$ mauvais $\Rightarrow$ modèle peu fiable : on diminue la taille
+\end{itemize}
+\end{block}
++ beaucoup de règles pour sélectionner les points et enrichir le plan d'expériences
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Illustration (source : F. Vanden Berghen)}
+\includegraphics[width=.5\textwidth]{trm/Image2.png}
+\includegraphics[width=.5\textwidth]{trm/Image3.png}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}[noframenumbering]
+\frametitle{Illustration (source : F. Vanden Berghen)}
+\includegraphics[width=.5\textwidth]{trm/Image4.png}
+\includegraphics[width=.5\textwidth]{trm/Image5.png}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}[noframenumbering]
+\frametitle{Illustration (source : F. Vanden Berghen)}
+\includegraphics[width=.5\textwidth]{trm/Image6.png}
+\includegraphics[width=.5\textwidth]{trm/Image7.png}
+\end{frame}
+%-----------------------------------------------------
+\begin{frame}
+\frametitle{Avantages et inconvénients}
+\begin{block}{Avantages}
+\begin{itemize}
+ \item Garantie de convergence
+ \item Méthodes assez parcimonieuses
+ \item Robuste
+ \item Accepte un assez grand nombre de variables
+\end{itemize}
+\scriptsize{
+ \begin{thebibliography}{1}
+\beamertemplatearticlebibitems
+     \bibitem{conn}
+     Conn, Scheinberg, and Vicente
+         \newblock Introduction to derivative-free optimization
+         \newblock MPS-SIAM Series on Optimization (2009)
+ \end{thebibliography}}
+\end{block}
+
+\begin{alertblock}{Méthode locale}
+\begin{itemize}
+ \item Pas de métamodèle final utilisable globalement
+ \item Proche des méthodes de gradient
+\end{itemize}
+\end{alertblock}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -933,6 +972,303 @@ iteration 4
 %\includegraphics[height=5cm]{figures/python/invproba3}
 %\end{center}
 %\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Kernel Design}
+\subsection{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+\structure{Making new from old:}
+Many operations can be applied to psd functions while retaining this property
+\begin{block}{}
+Kernels can be:
+\begin{itemize}
+  \item Summed together
+  \begin{itemize}
+    \item On the same space $k(x,y) = k_1(x,y) + k_2(x,y)$
+    \item On the tensor space $k(x,y) = k_1(x_1,y_1) + k_2(x_2,y_2)$
+  \end{itemize}
+  \item Multiplied together
+  \begin{itemize}
+    \item On the same space $k(x,y) = k_1(x,y) \times k_2(x,y)$
+    \item On the tensor space $k(x,y) = k_1(x_1,y_1) \times k_2(x_2,y_2)$
+  \end{itemize}
+  \item Composed with a function
+  \begin{itemize}
+    \item $k(x,y) = k_1(f(x),f(y))$
+  \end{itemize}
+\end{itemize}
+\end{block}
+\begin{center}
+\alert{How can this be useful?}
+\end{center}
+\end{frame}
+
+% \subsection{Sum of kernels}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Sum of kernels over the same space }
+\begin{example}[The Mauna Loa observatory dataset]
+This famous dataset compiles the monthly $CO_2$ concentration in Hawaii since 1958.
+\begin{center}
+\includegraphics[height=4.5cm]{figures/python/CO2-data}
+\end{center}
+Let's try to predict the concentration for the next 20 years.
+\end{example}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Sum of kernels over the same space }
+We first consider a squared-exponential kernel:
+$$ \displaystyle k_{se}(x,y) = \sigma^2\exp \left(-\frac{(x-y)^2}{\theta^2} \right)$$
+\begin{center}
+\includegraphics[height=3.7cm]{figures/python/CO2-rbfa} \quad \includegraphics[height=3.7cm]{figures/python/CO2-rbfb}
+\end{center}
+\begin{block}{}
+\centering
+\alert{The results are terrible!}
+\end{block}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Sum of kernels over the same space }
+What happen if we sum both kernels?
+\begin{equation*}
+k(x,y) = k_{se1}(x,y) + k_{se2}(x,y)
+\end{equation*}
+\pause
+\begin{center}
+\vspace{-8mm} \includegraphics[height=4.5cm]{figures/python/CO2-rbfab}
+\end{center}
+%\vspace{1mm}
+\begin{block}{}
+\centering
+\alert{The model is drastically improved!}
+\end{block}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Sum of kernels over the same space }
+We can try the following kernel:
+\begin{equation*}
+k(x,y) = \sigma_0^2  x^2 y^2 + k_{se1}(x,y) + k_{se2}(x,y) + k_{per}(x,y)
+\end{equation*}
+\pause
+\begin{center}
+\vspace{-8mm}  \includegraphics[height=4.5cm]{figures/python/CO2-rbfabpq}
+\end{center}
+\begin{block}{}
+\centering
+\alert{Once again, the model is significantly improved.}
+\end{block}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Sum of kernels over tensor space}
+\begin{block}{Property}
+\begin{equation*}
+k(x,y) = k_1(x_1,y_1) +  k_2(x_2,y_2)
+\end{equation*}
+is valid covariance structure.\\
+\begin{columns}[c]
+\begin{column}{3cm}
+\includegraphics[width=3cm]{figures/python/newfromold-sum2-k1}
+\end{column}
+\begin{column}{2mm}
+$+$
+\end{column}
+\begin{column}{3cm}
+\includegraphics[width=3cm]{figures/python/newfromold-sum2-k2}
+\end{column}
+\begin{column}{2mm}
+$=$
+\end{column}
+\begin{column}{3cm}
+\includegraphics[width=3cm]{figures/python/newfromold-sum2-k12}
+\end{column}
+\end{columns}
+\vspace{4mm}
+\end{block}
+\structure{Remark:}
+From a GP point of view, $k$ is the kernel of
+$$Z(x) = Z_1(x_1) + Z_2(x_2)$$
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Sum of kernels over tensor space}
+We can have a look at a few sample paths from $Z$:
+\begin{center}
+\includegraphics[width=3.5cm]{figures/python/newfromold-sum2-traj124} \includegraphics[width=3.5cm]{figures/python/newfromold-sum2-traj121} \includegraphics[width=3.5cm]{figures/python/newfromold-sum2-traj123} % \includegraphics[width=3.5cm]{figures/newfromold-sum2-traj122}
+\end{center}
+\qquad \alert{$\Rightarrow$ They are additive (up to a modification)}\\ \ \\
+Tensor Additive kernels are very useful for
+\begin{itemize}
+  \item Approximating additive functions
+  \item Building models over high dimensional inputs spaces
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Product over the same space}
+\begin{block}{Property}
+\begin{equation*}
+k(x,y) = k_1(x,y) \times  k_2(x,y)
+\end{equation*}
+is valid covariance structure.
+\end{block}
+%\vspace{10mm}
+\begin{example}
+We consider the product of a squared exponential with a cosine:
+\begin{columns}[c]
+\begin{column}{3cm}
+\includegraphics[width=3cm]{figures/python/newfromold-pa.pdf}
+\end{column}
+\begin{column}{2mm}
+$\times$
+\end{column}
+\begin{column}{3cm}
+\includegraphics[width=3cm]{figures/python/newfromold-pb.pdf}
+\end{column}
+\begin{column}{2mm}
+$=$
+\end{column}
+\begin{column}{3cm}
+\includegraphics[width=3cm]{figures/python/newfromold-pab1.pdf}
+\end{column}
+\end{columns}
+\vspace{5mm}
+\end{example}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Product over the tensor space}
+\begin{block}{Property}
+\begin{equation*}
+k(x,y) = k_1(x_1,y_1) \times k_2(x_2,y_2)
+\end{equation*}
+is valid covariance structure.
+\end{block}
+%\vspace{10mm}
+\begin{example}
+We multiply 2 squared exponential kernel
+\begin{columns}[c]
+\begin{column}{3cm}
+\includegraphics[width=3cm]{figures/python/newfromold-sum2-k1}
+\end{column}
+\begin{column}{2mm}
+$\times $
+\end{column}
+\begin{column}{3cm}
+\includegraphics[width=3cm]{figures/python/newfromold-sum2-k2}
+\end{column}
+\begin{column}{2mm}
+$=$
+\end{column}
+\begin{column}{3cm}
+\includegraphics[width=3cm]{figures/python/newfromold-prod2-k12}
+\end{column}
+\end{columns}
+\vspace{5mm}
+Calculation shows this is the usual 2D squared exponential kernel.
+\end{example}
+\end{frame}
+
+% \subsection{Composition with a function}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Composition with a function}
+\begin{block}{Property}
+Let $k_1$ be a kernel over $D_1 \times D_1$ and $f$ be an arbitrary function $D \rightarrow D_1$, then
+\begin{equation*}
+k(x,y) = k_1(f(x),f(y))
+\end{equation*}
+is a kernel over $D \times D $.\\
+\small
+\textbf{proof}\\
+\begin{equation*}
+\sum \sum a_i  a_j k(x_i,x_j) = \sum \sum a_i a_j k_1(\underbrace{f(x_i)}_{y_i},\underbrace{f(x_j)}_{y_j}) \geq 0
+\end{equation*}
+\end{block}
+\vspace{5mm}
+\structure{Remarks:}
+\begin{itemize}
+\item $k$ corresponds to the covariance of $Z(x) = Z_1(f(x))$
+\item This can be seen as a (non-linear) rescaling of the input space
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+\begin{example}
+We consider $f(x) = \frac1x$ and a Mat\'ern 3/2 kernel $k_1(x,y) = (1 + |x-y|) e^{-|x-y|}$.\\ \vspace{5mm}
+\textbf{We obtain:}
+\begin{columns}[c]
+\begin{column}{5cm}
+\begin{center}
+Kernel
+\includegraphics[width=4cm]{figures/python/newfromold-compfunc-k}
+\end{center}
+\end{column}
+\begin{column}{5cm}
+\begin{center}
+Sample paths
+\includegraphics[width=4cm]{figures/python/newfromold-compfunc-traj}
+\end{center}
+\end{column}
+\end{columns}
+\end{example}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+\structure{All these transformations can be combined!}
+\begin{example}
+$k(x,y) = f(x)f(y)k_1(x,y)$ is a valid kernel.\\
+\vspace{0.5cm}
+This can be illustrated with $f(x) = \frac1x$ and $k_1(x,y) = (1 + |x-y|) e^{-|x-y|}$:\\
+\begin{columns}[c]
+\begin{column}{5cm}
+\begin{center}
+Kernel
+\includegraphics[width=4cm]{figures/python/newfromold-prodfunc-k}
+\end{center}
+\end{column}
+\begin{column}{5cm}
+\begin{center}
+Sample paths
+\includegraphics[width=4cm]{figures/python/newfromold-prodfunc-traj}
+\end{center}
+\end{column}
+\end{columns}
+\end{example}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+\begin{exampleblock}{Example}
+\begin{center}
+\includegraphics[height=4cm]{figures/piton_fournaise_5dike_intrusions_98_00} 
+\end{center}
+\end{exampleblock}
+\alert{$\Rightarrow$ R demo}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Other kernel design methods}
+There are two other popular methods for kernel design:
+\begin{itemize}
+    \item Bochner Theorem\\
+There is an equivalence between positive measures and stationnary positive definite functions. 
+    \item Linear operators\\
+If the function to approximate has particular properties that can be obtained via a linear transform, it is possible to build a GP with the wanted properties. For example, one can build symmetric GPs or GPs with integral equal to zero.
+\end{itemize}
+\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
