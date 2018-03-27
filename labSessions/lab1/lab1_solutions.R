@@ -77,6 +77,7 @@ meshRatio(X)
 X <- X_lhsopt
 Y <- compute_wls(X)
 
+save(X, Y, file='XY_volcano.Rdata')
 
 ###### Q6 ######
 
