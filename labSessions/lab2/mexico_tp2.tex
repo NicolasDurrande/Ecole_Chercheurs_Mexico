@@ -67,9 +67,12 @@ Si vous n'êtes pas arrivé à un résultat convainquant vous pouvez utiliser la
 
 \paragraph{Q8.} Tester différentes covariances et tendances en estimant les paramètres par maximum de vraisemblance.
 
-\paragraph{Q9. } Valider le modèle (moyenne et intervalles de confiance) en utilisant \texttt{plot(model)}. Effectuer des représentations graphiques à l'aide de la commande \texttt{sectionview(m, center = rep(0.5, 5))}. 
+\paragraph{Q9. } Valider le modèle (moyenne avec le $Q_2$ et intervalles de confiance avec les résidus normalisés). Essayer également \texttt{plot(model)}. Effectuer des représentations graphiques à l'aide de la commande \texttt{sectionview(m, center = rep(0.5, 5))}. 
 
-\paragraph{Q10 (bonus).} Utiliser la fonction \texttt{sobolGP} du package \texttt{sensitivity} pour effectuer une analyse de sensibilité sur le metamodèle.
+\paragraph{Q10 (bonus).} Utiliser le métamodèle pour effectuer une analyse de sensibilité (AS). Il y a 2 solutions : soit faire l'AS sur la moyenne du krigeage, soit faire l'AS sur des trajectoires.
+Dans le premier cas, on a besoin d'encapsuler la sortie de la fonction \texttt{predict(m)}. Dans le deuxième cas, on peut directement utiliser la fonction \texttt{sobolGP} du package \texttt{sensitivity}.
+Se reporter au script d'aide. Comparer les deux résultats obtenus et les temps de calcul respectifs.
+
+A noter : par rapport au TP précédent, on effectue ici l'AS sur la fonction des moindres carrés et pas le déplacement en un point. Noter les similarités et différences entre les deux jeux d'indices obtenus.
 
 \end{document}
-

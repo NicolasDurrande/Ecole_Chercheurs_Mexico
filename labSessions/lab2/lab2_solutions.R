@@ -86,3 +86,24 @@ lines(x, dnorm(x))
 
 # visualisation
 sectionview(m, center = rep(0.5, 5))
+
+#### Question 10 ####
+library(lhs)
+getmean <- function(newdata, m) {
+  pred <- predict(object=m, newdata=newdata, type="UK")
+  return(pred$mean)
+}
+X1 <- data.frame(randomLHS(10000,5))
+X2 <- data.frame(randomLHS(10000,5))
+colnames(X1) <- colnames(X2) <- colnames(m@X)
+res2 <- soboljansen(model = getmean, X1=X1, X2=X2, nboot = 50, conf = 0.95, m=m)
+plot(res2)
+
+
+X1 <- data.frame(randomLHS(1000,5))
+X2 <- data.frame(randomLHS(1000,5))
+candidate <- data.frame(randomLHS(100,5))
+colnames(X1) <- colnames(X2) <- colnames(candidate) <- colnames(m@X)
+res <- sobolGP(model = m, type="UK", MCmethod="soboljansen",
+               X1=X1, X2=X2, nsim = 20, nboot=50, sequential = TRUE, candidate=candidate)
+plot(res)
