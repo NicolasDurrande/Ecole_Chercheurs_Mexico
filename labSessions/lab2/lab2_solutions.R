@@ -39,6 +39,7 @@ res_std <- (Y-res$mean) / res$sd
 hist(res_std, freq=FALSE, xlim=c(min(X, -3), max(X, 3)))
 x <- seq(-3, 3, 0.03)
 lines(x, dnorm(x))
+plot(m)
 
 #### Question 6 ####
 predict.km(m, newdata=data.frame(x=10), type='SK', light.return = TRUE)
@@ -67,8 +68,8 @@ par(mfrow=c(1,1))
 
 #### Question 8 ####
 
-m <- km(y~1, design=data.frame(x=X), response=data.frame(y=Y), 
-        covtype="matern5_2", coef.trend = 0, nugget=1e-8)
+m <- km(y~., design=data.frame(x=X), response=data.frame(y=Y), 
+        covtype="matern5_2", nugget=1e-8)
 
 print(m)
 
@@ -99,11 +100,12 @@ colnames(X1) <- colnames(X2) <- colnames(m@X)
 res2 <- soboljansen(model = getmean, X1=X1, X2=X2, nboot = 50, conf = 0.95, m=m)
 plot(res2)
 
-
 X1 <- data.frame(randomLHS(1000,5))
 X2 <- data.frame(randomLHS(1000,5))
 candidate <- data.frame(randomLHS(100,5))
 colnames(X1) <- colnames(X2) <- colnames(candidate) <- colnames(m@X)
 res <- sobolGP(model = m, type="UK", MCmethod="soboljansen",
                X1=X1, X2=X2, nsim = 20, nboot=50, sequential = TRUE, candidate=candidate)
+pdf("sobolGP.pdf")
 plot(res)
+dev.off()
