@@ -49,24 +49,27 @@ et \texttt{coef.cov} sur leur régularité (il correspond à une distance sur $x
 \paragraph{Q3.} Simuler et représenter des trajectoires conditionnelles (même script mais option \texttt{cond} de la fonction \texttt{simulate}). Tracer sur le même graphique les observations (\texttt{points(X,Y)}) ; qu'observez-vous ?
 Tracer la moyenne et des intervalles de confiance à l'aide de la fonction \texttt{sectionview} du package \texttt{DiceView}.
 
-\paragraph{Q4.} Changer les paramètres d'appel de la fonction \texttt{km} afin d'estimer les paramètres de covariance par maximum de vraisemblance. 
+\paragraph{Q4.} Changer les paramètres d'appel de la fonction \texttt{km} afin d'estimer les paramètres de covariance par maximum de vraisemblance (il suffit d'enlever certains arguments, cf. documentation). 
 Vous pouvez ensuite utiliser la commande \texttt{print(m)} pour afficher des détails sur le modèle. Les paramètres trouvés sont-ils proche de ceux que vous aviez intuités ?
 
-\paragraph{Q5.} La fonction \texttt{leaveOneOut.km} est bien pratique pour calculer les prédictions du modèle aux points du plan d'expérience en utilisant tous les points du plan sauf celui où l'on effectue la prédiction. Utiliser ce vecteur de prédiction pour calculer les résidus standardisés (erreur de prédiction divisée par l'écart type de prédiction). Les comparer avec une distribution normale centrée réduite. Le résultat vous parrait-il satisfaisant ?  
+\paragraph{Q5.} La fonction \texttt{leaveOneOut.km} est bien pratique pour calculer les prédictions du modèle aux points du plan d'expérience en utilisant tous les points du plan sauf celui où l'on effectue la prédiction. 
+Utiliser ce vecteur de prédiction pour calculer les résidus standardisés (erreur de prédiction divisée par l'écart type de prédiction). Les comparer avec une distribution normale centrée réduite. Le résultat vous parait-il satisfaisant ?  
+Vérifier la cohérence de vos résultats avec la commande \texttt{plot(m)} qui permet d'automatiser cette tâche.
 
-\paragraph{Q6.} Utiliser la fonction \texttt{predict} pour prédire la valeur de $f$ au point $x=10$. Pouvez-vous expliquer (et critiquer) le résultat obtenu ? Créer un nouveau modèle en estimant les paramètres de tendance (krigeage universel) et jouer sur la formule (premier argument) de la fonction \texttt{km} pour obtenir un modèle plus satisfaisant.
+\paragraph{Q6.} Utiliser la fonction \texttt{predict} pour prédire la valeur de $f$ au point $x=4$. Pouvez-vous expliquer (et critiquer) le résultat obtenu ? Pour compléter, visualiser le modèle avec \texttt{sectionview} et l'argument
+\texttt{xlim=c(-0.2, 4)}. Créer un nouveau modèle en estimant les paramètres de tendance (krigeage universel) et jouer sur \texttt{formula} (premier argument) de la fonction \texttt{km} pour obtenir un modèle plus satisfaisant.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Cas test du volcan}
 
-\paragraph{Q7.} Récupérer le meilleur plan d'expérience de 100 points en dimension 5 obtenu lors de la séance d'hier. Si vous n'êtes pas arrivé à un résultat convainquant vous pouvez utiliser la correction présente sur le dropbox.
+\paragraph{Q7.} Récupérer le meilleur plan d'expérience de 100 points en dimension 5 obtenu lors de la séance d'hier. 
+Si vous n'êtes pas arrivé à un résultat convainquant vous pouvez utiliser la correction présente (\texttt{XY\_volcano.Rdata}) sur dropbox.
 
-\paragraph{Q8.} Tester différentes covariances et estimer les paramètres par maximum de vraisemblance.
+\paragraph{Q8.} Tester différentes covariances et tendances en estimant les paramètres par maximum de vraisemblance.
 
-\paragraph{Q9. } Valider le modèle (moyenne et intervalles de confiance). Effectuer des représentations graphiques à l'aide de la commande \texttt{sectionview(m, center = rep(0.5, 5))}. 
+\paragraph{Q9. } Valider le modèle (moyenne et intervalles de confiance) en utilisant \texttt{plot(model)}. Effectuer des représentations graphiques à l'aide de la commande \texttt{sectionview(m, center = rep(0.5, 5))}. 
 
 \paragraph{Q10 (bonus).} Utiliser la fonction \texttt{sobolGP} du package \texttt{sensitivity} pour effectuer une analyse de sensibilité sur le metamodèle.
-
 
 \end{document}
 
