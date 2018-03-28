@@ -9,11 +9,8 @@
 \newcolumntype{N}{@{}m{2pt}@{}}
 \input{../style.tex} 
 
-%\title[Short course on Statistical Modelling for Optimization -- lecture 1/4]{ \small Short course Statistical Modelling for Optimization -- lecture 1/4 \\ \vspace{3mm} \LARGE Statistical models in engineering}
-%\institute[Mines St-\'Etienne]{Nicolas Durrande (durrande@emse.fr) \\ Jean-Charles Croix (jean-charles.croix@emse.fr) \\ Mines St-\'Etienne -- France}
-%\author[Pereira, June 2017]{June 2017 -- Universidad Tecnol\'ogica de Pereira -- Colombia}
 \title[\'Ecole chercheurs MEXICO]{ \small \'Ecole chercheurs MEXICO, La Rochelle, Mars 2018\\ \vspace{3mm} \LARGE Model Based Optimization}
-\author[\quad La Rochelle, March 2018]{Victor Picheny, victor.picheny@inra.fr, Nicolas Durrande, nicolas@prowler.io}
+\author[\quad La Rochelle, March 2018]{Victor Picheny, victor.picheny@inra.fr \\ Nicolas Durrande, nicolas@prowler.io}
 \date{\null}
 
 \DeclareMathOperator*{\Var}{var}
@@ -52,7 +49,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section[Global optim.]{Introduction : global optimization}
-% \subsection{}
+\subsection{}
 
 \begin{frame}{}
 \begin{block}{Optimisation pour l'aide à la conception / décision}
@@ -213,9 +210,12 @@ Amélioration depuis un point initial
 \vspace{5mm}
 $\Rightarrow$ même principe général, avec un métamodèle ?
 \end{frame}
+
 %-----------------------------------------------------
 \section[Trust regions]{Trust regions (quadratic metamodels)}
+\subsection{}
 %-----------------------------------------------------
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
 Si le nombre d'appels au modèle est trop limité, on peut optimiser le métamodèle à la place :
@@ -509,8 +509,11 @@ A chaque itération :
 Pas de métamodèle final utilisable globalement - mais gradient + hessien !
 \end{alertblock}
 \end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section[EG0]{Kriging-based optimization (EGO)}
+\subsection{}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
 \textbf{Global optimization} methods are a trade-off between
@@ -518,25 +521,25 @@ Pas de métamodèle final utilisable globalement - mais gradient + hessien !
 	\item Exploitation of past good results
 	\item Exploration of the space
 \end{itemize}
-\vspace{3mm}
 \begin{center}
 \textbf{How can GPR models be helpful?}\\
-\includegraphics[height=5cm]{figures/python/ego_0}
+\includegraphics[height=5cm]{figures/python/ego_improv}
 \end{center}
+For now the best observed value is 1.79.
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-In our example, the best observed value is 1.79
-\begin{center}
-\includegraphics[height=5cm]{figures/python/ego_improv}
-\end{center}
-Various criteria can be studied
-\begin{itemize}
-	\item probability of improvement
-	\item Expected improvement
-\end{itemize}
-\end{frame}
+% \begin{frame}{}
+% In our example, the best observed value is 1.79
+% \begin{center}
+% \includegraphics[height=5cm]{figures/python/ego_improv}
+% \end{center}
+% Various criteria can be studied
+% \begin{itemize}
+% 	\item probability of improvement
+% 	\item Expected improvement
+% \end{itemize}
+% \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
@@ -632,126 +635,126 @@ This algorithm is called \textbf{Efficient Global Optimization} (EGO, Jones et a
 %\end{example}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{frame}{}
-%\begin{exampleblock}{Illustration for $d=6$ (Hartman)}
-%	Illustration in higher dimension
-%\begin{center}
-%\includegraphics[height=5.5cm]{figures/egoHartman} \includegraphics[height=5.5cm]{figures/egoHartman2}
-%\end{center}
-%\small Source: \textit{DiceOptim}, Roustant, Ginsbourger and Deville, 2009.
-%\end{exampleblock}
-%\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
-\begin{exampleblock}{Example in 5d: surface displacements misfit minimization}
-$\Rightarrow$ demo with \texttt{mainInversionPunctualDisplSource.R}\\
-!!! normalize the data: WLS has a few very large values, it is always $>0$: make it more gaussian, 
-$\mathtt{wls}\_norm = \log(1+\mathtt{wls})$ and all $x$'s and $\mathtt{wls}\_norm$ between 0 and 1.
-\begin{minipage}[c]{0.6\textwidth}
+\begin{exampleblock}{Illustration for $d=6$ (Hartman)}
+	Illustration in higher dimension
 \begin{center}
-\includegraphics[width=\textwidth]{figures/misfit_learn_set} 
+\includegraphics[height=5.5cm]{figures/egoHartman} \includegraphics[height=5.5cm]{figures/egoHartman2}
 \end{center}
-\end{minipage}
-\hspace{0.3cm}
-\begin{minipage}[c]{0.30\textwidth}
-{\small 100 $\{xs,ys,zs,a,p\}$ points chosen through an optimized Latin Hypercube Sampling 
-(\texttt{R} libraries \texttt{DiceDesign} or \texttt{lhs}).}\\
-\end{minipage}
+\small Source: \textit{DiceOptim}, Roustant, Ginsbourger and Deville, 2009.
 \end{exampleblock}
 \end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-\small (demo with \texttt{mainInversionPunctualDisplSource.R}, cont.)
-\begin{center}
-\includegraphics[width=0.7\textwidth]{figures/misfit_test_set} 
-\end{center}
-{\tiny 110 random $\{xs,ys,zs,a,p\}$ test points.}\\
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-\small (demo with \texttt{mainInversionPunctualDisplSource.R}, cont.)
-\begin{center}
-\includegraphics[width=0.9\textwidth]{figures/misfit_test_set_2} 
-\end{center}
-{\tiny 110 test points.}\\
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-\small (demo with \texttt{mainInversionPunctualDisplSource.R}, cont.)\\
-\small EGO parameters: anisotropic Mat\`ern 5/2 kernel, GP updated (log-likelihood maximized) every 5 added points, BFGS with bounded variables (from \texttt{optim()} function) restarted from random initial points for maximizing log-likelihood and EI.
-\begin{minipage}[c]{0.6\textwidth}
-\begin{center}
-\includegraphics[width=\textwidth]{figures/misfit_EGO_conv} 
-\end{center}
-\end{minipage}
-\hspace{0.3cm}
-\begin{minipage}[c]{0.3\textwidth}
-Preferential sampling of good regions of $S$, but global therefore sometimes increasing WLS.
-Lower bound on $\theta_i$'s increased from 0.08 to 0.1 at $t=250$ ($x_i$'s and $\theta_i$'s
-normed between 0 and 1).
-\end{minipage}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-\small (demo with \texttt{mainInversionPunctualDisplSource.R}, cont.)
-\begin{minipage}[c]{0.6\textwidth}
-\begin{center}
-\includegraphics[width=\textwidth]{figures/pairs_X_old_new} 
-\end{center}
-\end{minipage}
-\hspace{0.3cm}
-\begin{minipage}[c]{0.3\textwidth}
-Black: LHS initial points. \\
-Blue: EGO points.\\
-\vskip\baselineskip
-Note the patterns in new points. Accumulation at lower bound of $a$ and mid interval of $p$ before $t=250$.
-\end{minipage}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-\small (demo with \texttt{mainInversionPunctualDisplSource.R}, cont.)
-\begin{minipage}[c]{0.6\textwidth}
-\begin{center}
-\includegraphics[width=\textwidth]{figures/pairs_X_good_15percent} 
-\end{center}
-\end{minipage}
-\hspace{0.3cm}
-\begin{minipage}[c]{0.3\textwidth}
-15\% best sampled points. Note the ``function'' for the $(a,p)$ pair, i.e., $a^\star(p^\star)$.
-\end{minipage}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-\small (demo with \texttt{mainInversionPunctualDisplSource.R}, cont.)
-\mbox{ % mbox to avoid linebreak
-\begin{minipage}[c]{0.56\textwidth}
-\begin{center}
-\includegraphics[width=\textwidth]{figures/non_identif_a_p} 
-\end{center}
-\end{minipage}
-\hspace{0.3cm}
-\begin{minipage}[c]{0.4\textwidth}
-Mogi model only dependency in $a$ and $p$ is through $a^3 \times p$: it is not identifiable. \\
-\vskip\baselineskip
-EGO tells it by preferential sampling in the valley 
-$$a^3 \times p = \text{const.} = {a^\star}^3 \times p^\star$$
-\end{minipage}
-} % end mbox
-Other EGO output: a statistical model of WLS. \\
-The last length scales are an indication of the 
-sensitivity of WLS to each variable: $a$, $p$ and $zs$ are very sensitive 
-($\theta_i$'s small, in $[0.08,0.1]$), $xs$ a little sensitive ($\theta \text{ in } [0.1,2.5]$) 
-and $ys$ insensitive ($\theta \approx 3$).
-\end{frame}
-
+ 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{}
+% \begin{exampleblock}{Example in 5d: surface displacements misfit minimization}
+% $\Rightarrow$ demo with \texttt{mainInversionPunctualDisplSource.R}\\
+% !!! normalize the data: WLS has a few very large values, it is always $>0$: make it more gaussian, 
+% $\mathtt{wls}\_norm = \log(1+\mathtt{wls})$ and all $x$'s and $\mathtt{wls}\_norm$ between 0 and 1.
+% \begin{minipage}[c]{0.6\textwidth}
+% \begin{center}
+% \includegraphics[width=\textwidth]{figures/misfit_learn_set} 
+% \end{center}
+% \end{minipage}
+% \hspace{0.3cm}
+% \begin{minipage}[c]{0.30\textwidth}
+% {\small 100 $\{xs,ys,zs,a,p\}$ points chosen through an optimized Latin Hypercube Sampling 
+% (\texttt{R} libraries \texttt{DiceDesign} or \texttt{lhs}).}\\
+% \end{minipage}
+% \end{exampleblock}
+% \end{frame}
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{}
+% \small (demo with \texttt{mainInversionPunctualDisplSource.R}, cont.)
+% \begin{center}
+% \includegraphics[width=0.7\textwidth]{figures/misfit_test_set} 
+% \end{center}
+% {\tiny 110 random $\{xs,ys,zs,a,p\}$ test points.}\\
+% \end{frame}
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{}
+% \small (demo with \texttt{mainInversionPunctualDisplSource.R}, cont.)
+% \begin{center}
+% \includegraphics[width=0.9\textwidth]{figures/misfit_test_set_2} 
+% \end{center}
+% {\tiny 110 test points.}\\
+% \end{frame}
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{}
+% \small (demo with \texttt{mainInversionPunctualDisplSource.R}, cont.)\\
+% \small EGO parameters: anisotropic Mat\`ern 5/2 kernel, GP updated (log-likelihood maximized) every 5 added points, BFGS with bounded variables (from \texttt{optim()} function) restarted from random initial points for maximizing log-likelihood and EI.
+% \begin{minipage}[c]{0.6\textwidth}
+% \begin{center}
+% \includegraphics[width=\textwidth]{figures/misfit_EGO_conv} 
+% \end{center}
+% \end{minipage}
+% \hspace{0.3cm}
+% \begin{minipage}[c]{0.3\textwidth}
+% Preferential sampling of good regions of $S$, but global therefore sometimes increasing WLS.
+% Lower bound on $\theta_i$'s increased from 0.08 to 0.1 at $t=250$ ($x_i$'s and $\theta_i$'s
+% normed between 0 and 1).
+% \end{minipage}
+% \end{frame}
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{}
+% \small (demo with \texttt{mainInversionPunctualDisplSource.R}, cont.)
+% \begin{minipage}[c]{0.6\textwidth}
+% \begin{center}
+% \includegraphics[width=\textwidth]{figures/pairs_X_old_new} 
+% \end{center}
+% \end{minipage}
+% \hspace{0.3cm}
+% \begin{minipage}[c]{0.3\textwidth}
+% Black: LHS initial points. \\
+% Blue: EGO points.\\
+% \vskip\baselineskip
+% Note the patterns in new points. Accumulation at lower bound of $a$ and mid interval of $p$ before $t=250$.
+% \end{minipage}
+% \end{frame}
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{}
+% \small (demo with \texttt{mainInversionPunctualDisplSource.R}, cont.)
+% \begin{minipage}[c]{0.6\textwidth}
+% \begin{center}
+% \includegraphics[width=\textwidth]{figures/pairs_X_good_15percent} 
+% \end{center}
+% \end{minipage}
+% \hspace{0.3cm}
+% \begin{minipage}[c]{0.3\textwidth}
+% 15\% best sampled points. Note the ``function'' for the $(a,p)$ pair, i.e., $a^\star(p^\star)$.
+% \end{minipage}
+% \end{frame}
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{}
+% \small (demo with \texttt{mainInversionPunctualDisplSource.R}, cont.)
+% \mbox{ % mbox to avoid linebreak
+% \begin{minipage}[c]{0.56\textwidth}
+% \begin{center}
+% \includegraphics[width=\textwidth]{figures/non_identif_a_p} 
+% \end{center}
+% \end{minipage}
+% \hspace{0.3cm}
+% \begin{minipage}[c]{0.4\textwidth}
+% Mogi model only dependency in $a$ and $p$ is through $a^3 \times p$: it is not identifiable. \\
+% \vskip\baselineskip
+% EGO tells it by preferential sampling in the valley 
+% $$a^3 \times p = \text{const.} = {a^\star}^3 \times p^\star$$
+% \end{minipage}
+% } % end mbox
+% Other EGO output: a statistical model of WLS. \\
+% The last length scales are an indication of the 
+% sensitivity of WLS to each variable: $a$, $p$ and $zs$ are very sensitive 
+% ($\theta_i$'s small, in $[0.08,0.1]$), $xs$ a little sensitive ($\theta \text{ in } [0.1,2.5]$) 
+% and $ys$ insensitive ($\theta \approx 3$).
+% \end{frame}
+% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
 \begin{exampleblock}{Difficulties and challenges with EGO}
@@ -785,12 +788,25 @@ $\Rightarrow$ these are the topics of current research. Let's mention a few exte
 \begin{exampleblock}{Related problems addressed with GPs}
 \begin{itemize}
 \item EGO with constraints: $\min_x f(x) \text{ s.t. } g(x) \le 0$, multiply the $EI$ by the probability of constraints satisfaction.
+\item EGO with fixed budget or parallel EGO, see work from D. Ginsbourger et al.
+\item GP for multi-objective optimization: $\min_x \{f_1(x), \dots f_m(x)\}$, cf. Binois et al.
 \item GP for target attainment: find the set of $x$ s.t. $f(x) = T$, change the $EI$ into $c(x,x) \times \text{pdf}\left((T-m(x))/sqrt(c(x,x))\right)$, cf. Picheny et al.
 \item GP for probability estimation: find $\mathds P (f(x,U)\le T) $ where $U$ is a random vector.
-\item GP for multi-objective optimization: $\min_x \{f_1(x), \dots f_m(x)\}$, cf. Binois et al.
 \end{itemize}
 \end{exampleblock}
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+\begin{exampleblock}{Example: }
+There are algorithms in the same spirit as EGO for inverse problems (calibration) and/or probability estimation:
+\begin{center}
+    \includegraphics[width=0.7\textwidth]{fig/illustOptIMSET}
+\end{center}
+See work from V. Picheny et al...
+\end{exampleblock}
+\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\begin{frame}{}
@@ -819,185 +835,8 @@ $\Rightarrow$ these are the topics of current research. Let's mention a few exte
 %\vspace{5mm}
 %\small see works from D. Ginsbourger
 %\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section[Robust optim.]{Robust optimization}
-\subsection{}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{frame}{}
-%Robust optimization may mean various things:
-%\begin{itemize}
-%	\item There is observation noise on the output
-%	\item Some input variables $U$ are uncertain
-%	\item Model is uncertain, $f(x,U)$
-%\end{itemize}
-%\vspace{2mm}
-%\begin{example}
-%\begin{columns}[c]
-%\column{3cm}
-%	\includegraphics[height=4cm]{figures/RLRrobust}
-%\column{5cm}
-%	a +/- 1mm dispersion in the manufacturing of a car cylinder head  can degrade its performance (g CO2/km) by -20\% (worst case)\\
-%\end{columns}
-%\vspace{3mm}
-%	\small Source: Talk from R. Le Riche at the Porquerolles Summer School, 2014
-%\end{example}
-%\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{frame}{}
-% \begin{example}
-% Here is a basic example:
-% \begin{center}
-% \includegraphics[height=5cm]{figures/optim_rob_a}\\
-% Which input is the best?
-% \end{center}
-% \end{example}
-% \end{frame}
-
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% \begin{frame}[noframenumbering]{}
-%\begin{example}
-%Here is a basic example:
-%\begin{center}
-%\includegraphics[height=5cm]{figures/optim_rob_b}\\
-%Which input is the best?
-%\end{center}
-%\end{example}
-%\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{frame}[noframenumbering]{}
-%\begin{example}
-%A non Gaussian example
-%\begin{center}
-%\includegraphics[height=5cm]{figures/optim_rob_c}\\
-%In some cases, we may want to optimize the worst case scenario.
-%\end{center}
-%\end{example}
-%\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-Can EGO be adapted when observations are noisy?\\
-\vspace{5mm}
-First of all, using the current best observation as a minimum does not make much sense...\\
-\vspace{5mm}
-Some solutions are
-\begin{itemize}
-	\item[S1] Build a new model that interpolates $m(X)$ at $X$ where $m(X)$ accounts for the noise (non interpolating GP, e.g. with a white noise part in the kernel).
-	\item[S2] Include observation noise and replace $\min(F)$ by $\min(m(X))$ in the EI expression
-	\item[S3] Similar to 2 but consider an Expected Mean Improvement (V. Picheny).
-\end{itemize}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Solution 1}
-iteration 0
-\begin{center}
-\includegraphics[height=5cm]{figures/python/ego_EI1n0}
-\end{center}
-\tiny (noisy observations and their denoised versions are both shown as black crosses)\\
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[noframenumbering]{Solution 1}
-iteration 1
-\begin{center}
-\includegraphics[height=5cm]{figures/python/ego_EI1n1}
-\end{center}
-\tiny (noisy observations and their denoised versions are both shown as black crosses)\\
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[noframenumbering]{Solution 1}
-iteration 2
-\begin{center}
-\includegraphics[height=5cm]{figures/python/ego_EI1n2}
-\end{center}
-\tiny (noisy observations and their denoised versions are both shown as black crosses)\\
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[noframenumbering]{Solution 1}
-iteration 3
-\begin{center}
-\includegraphics[height=5cm]{figures/python/ego_EI1n3}
-\end{center}
-\tiny (noisy observations and their denoised versions are both shown as black crosses)\\
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}[noframenumbering]{Solution 1}
-iteration 4
-\begin{center}
-\includegraphics[height=5cm]{figures/python/ego_EI1n4}
-\end{center}
-\tiny (noisy observations and their denoised versions are both shown as black crosses)\\
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\section[Related problems]{Related problems}
-%\subsection{}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{frame}{}
-%Some related optimization problems are:
-%\begin{itemize}
-%	\item calibration problems
-%	\item probability computations
-%\end{itemize}
-%\vspace{8mm}
-%Some algorithms with an EGO spirit can be applied:
-%\begin{itemize}
-% 	\item SUR methods
-% \end{itemize}
-%\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{frame}{}
-%We want to find the input(s) such that f(x) = 3.2
-%\begin{center}
-%\includegraphics[height=5cm]{figures/python/inv}
-%\end{center}
-%\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{frame}[noframenumbering]{}
-%iteration 0:
-%\begin{center}
-%\includegraphics[height=5cm]{figures/python/invproba}
-%\end{center}
-%\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{frame}[noframenumbering]{}
-%iteration 1:
-%\begin{center}
-%\includegraphics[height=5cm]{figures/python/invproba1}
-%\end{center}
-%\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{frame}[noframenumbering]{}
-%iteration 2:
-%\begin{center}
-%\includegraphics[height=5cm]{figures/python/invproba2}
-%\end{center}
-%\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{frame}[noframenumbering]{}
-%iteration 3:
-%\begin{center}
-%\includegraphics[height=5cm]{figures/python/invproba3}
-%\end{center}
-%\end{frame}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Kernel Design}
 \subsection{}
@@ -1273,24 +1112,12 @@ Sample paths
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
-\begin{exampleblock}{Example}
+\begin{exampleblock}{Final example:}
 \begin{center}
-\includegraphics[height=4cm]{figures/piton_fournaise_5dike_intrusions_98_00} 
+\includegraphics[height=4cm]{figures/piton_ulos_2} 
 \end{center}
 \end{exampleblock}
 \alert{$\Rightarrow$ R demo}
-\end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Other kernel design methods}
-There are two other popular methods for kernel design:
-\begin{itemize}
-    \item Bochner Theorem\\
-There is an equivalence between positive measures and stationnary positive definite functions. 
-    \item Linear operators\\
-If the function to approximate has particular properties that can be obtained via a linear transform, it is possible to build a GP with the wanted properties. For example, one can build symmetric GPs or GPs with integral equal to zero.
-\end{itemize}
 \end{frame}
 
 
