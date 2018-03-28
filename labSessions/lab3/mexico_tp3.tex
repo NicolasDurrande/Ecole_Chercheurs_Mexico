@@ -34,32 +34,46 @@
 \paragraph{}
 L'objectif du TP consiste à trouver les paramètres du simulateurs numérique du volcan qui minimisent l'erreur de prédiction par rapport aux données observées par satellite. On s'intéresse donc à un problème de calibration que l'on va traiter comme un problème d'optimisation.
 \paragraph{}
-Ce TP comprend deux parties: pour commencer il faudra obtenir un bon modèle de krigeage qui approxime la fonction \texttt{compute\_wls} (deuxième partie du précédent TP). La seconde partie consiste à utiliser l'algorithme EGO du package \texttt{DiceOptim} pour trouver les paramètres qui minimisent cette erreur.
+Ce TP comprend deux parties: pour commencer il faudra obtenir un bon modèle de krigeage qui approche la fonction \texttt{compute\_wls} (deuxième partie du précédent TP - qu'on approfondira ici). 
+La seconde partie consiste à utiliser l'algorithme EGO du package \texttt{DiceOptim} pour trouver les paramètres qui minimisent cette erreur.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Modélisation par krigeage}
 
-\paragraph{Q1.} Récupérer le meilleur plan d'expérience de 100 points en dimension 5 obtenu lors de la séance de lundi. 
-Si vous n'êtes pas arrivé à un résultat convainquant vous pouvez utiliser le plan d'expérience et les observations fournies dans le fichier \texttt{XY\_volcano.Rdata} (à charger avec la fonction \texttt{load}).
+\paragraph{Q1.} Récupérer le meilleur plan d'expériences de 100 points en dimension 5 obtenu lors de la séance de lundi. 
+Si vous n'êtes pas arrivé à un résultat convainquant vous pouvez utiliser le plan d'expériences et les observations fournies dans le fichier \texttt{XY\_volcano.Rdata} (à charger avec la fonction \texttt{load}).
 
-\paragraph{Q2.} Tester différentes covariances et tendances en estimant les paramètres par maximum de vraisemblance. Les valeurs des paramètres estimés peuvent-elle nous renseigner sur la fonction que l'on approxime ? Proposer une interprétation.
+\paragraph{Q2.} Tester différentes covariances et tendances en estimant les paramètres par maximum de vraisemblance. Les valeurs des paramètres estimés peuvent-elle nous renseigner sur la fonction que l'on approche ? Proposer une interprétation.
 
 \paragraph{Q3. } Tester la qualité de prédiction de la moyenne de krigeage de différents modèles en calculant le critère 
 $$Q_2 = 1 - \frac{\sum_{i=1}^n (y_i - m(x_i))^2}{\sum_{i=1}^n (y_i - mean(y_i)^2}$$
 sur des résidus obtenus par leave-one-out (cf fonction \texttt{leaveOneOut.km}). Vous avez peut-être constaté précédement qu'ajouter des termes de tendance augmente toujours la vraisemblance du modèle mais est-ce que cela augmente forcément le $Q_2$ ? 
 
-\paragraph{Q4. } Normaliser les résidus obtenus par leave-one-out et utiliser le code qui vous est fourni pour comparer leur distribution à une loi $\mathcal{N}(0, 1)$. Le résultat vous parrait-il satisfaisant ? Choisir le modèle qui vous parrait le meilleur, c'est celui là que l'on utilisera par la suite pour l'optimisation.
+\paragraph{Q4. } Normaliser les résidus obtenus par leave-one-out et utiliser le code qui vous est fourni pour comparer leur distribution à une loi $\mathcal{N}(0, 1)$. 
+Le résultat vous parrait-il satisfaisant ? Pour compléter, utiliser la fonction \texttt{plot(model)}. Choisir le modèle qui vous parrait le meilleur, c'est celui-là que l'on utilisera par la suite pour l'optimisation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Optimisation Globale avec EGO}
 
-\paragraph{Q5. } Charger la package \texttt{DiceOptim} et utiliser la fonction \texttt{EGO.nstep} pour effectuer \texttt{nsteps=20} itérations de l'algorithme EGO. Cette fonction prend en entrée le modèle de krigeage ainsi que la fonction à optimiser \texttt{compute\_wls}. Par la suite, on notera \texttt{res} l'objet qui est retourné par la fonction \texttt{EGO.nsteps}.
+\paragraph{Q5. } Charger la package \texttt{DiceOptim} et utiliser la fonction \texttt{EGO.nstep} pour effectuer \texttt{nsteps=20} itérations de l'algorithme EGO. 
+Cette fonction prend en entrée le modèle de krigeage ainsi que la fonction à optimiser \texttt{compute\_wls}. Par la suite, on notera \texttt{res} l'objet qui est retourné par la fonction \texttt{EGO.nsteps}.
 
-\paragraph{Q6. } Tracer l'évolution des valeurs de la fonction objectif aux points visités par EGO en fonction de l'itération. Quel est la plus petite valeur observée et quels sont les paramètres associés ? Y-a-t'il une amélioration par rapport à la meilleure valeur observée sur le plan d'expérience ?
+\paragraph{Q6. } Observer les différents éléments contenus dans \texttt{res}. Tracer l'évolution des valeurs de la fonction objectif aux points visités par EGO en fonction de l'itération. 
+Quelle est la plus petite valeur observée et quels sont les paramètres associés ? Y a-t-il une amélioration par rapport à la meilleure valeur observée sur le plan d'expérience ?
+Comment observe-t-on le compromis exploration / intensification ?
 
-\paragraph{Q7. } Représenter à l'aide d'un graphique \texttt{pairs} la distribution dans l'espace des paramètres testés par l'optimiseur. Identifier des zones d'exploration et d'exploitation.
+\paragraph{Q7. } Représenter à l'aide d'un graphique \texttt{pairs} la distribution dans l'espace des paramètres testés par l'optimiseur. Identifier des zones d'exploration et d'intensification.
 
-\paragraph{Q9. } Utiliser la fonction \texttt{sectionview} de \texttt{DiceView} pour représenter une vue en coupe du modèle centrée sur l'optimum.
+\paragraph{Q9. } Utiliser la fonction \texttt{sectionview} de \texttt{DiceView} pour représenter une vue en coupe du modèle (\texttt{res\$lastmodel}) centrée sur l'optimum.
+
+\paragraph{Q10. } Reprendre les questions 5 à 9 en augmentant la valeur de \texttt{nsteps}. De manière alternative, on peut essayer de relancer \texttt{EGO.nstep} à partir du dernier modèle (\texttt{res\$lastmodel}), 
+où d'un nouveau modèle bâti à partir du plan d'expériences enrichi des 20 points.
+
+\paragraph{Q11 (bonus). } Reprendre les dernières questions sur l'analyse de sensibilité à l'aide de krigeage du TP précédent. Les résultats sont-il cohérents avec le comportement observé de l'algorithme EGO ?
+
+\textit{Il y a 2 solutions : soit faire l'AS sur la moyenne du krigeage, soit faire l'AS sur des trajectoires.
+Dans le premier cas, on a besoin d'encapsuler la sortie de la fonction \texttt{predict(m)}. Dans le deuxième cas, on peut directement utiliser la fonction \texttt{sobolGP} du package \texttt{sensitivity}.
+Se reporter au script d'aide. Comparer les deux résultats obtenus et les temps de calcul respectifs.} 
 
 %\paragraph{Q8 (bonus). } Comparer les résultats obtenus avec une optimisation par descente de gradient avec 120 évaluations de la fonction (et donc 20 itérations puisque, en dimension 5, chaque itération effectue 6 évaluation de la fonction pour évaluer la fonction et son gradient).
 \end{document}
