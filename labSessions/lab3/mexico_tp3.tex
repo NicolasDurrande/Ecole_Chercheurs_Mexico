@@ -1,0 +1,65 @@
+\documentclass[12pt]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{mathpazo} % math & rm
+% \linespread{1.05}        % Palatino needs more leading (space between lines)
+\usepackage[scaled]{helvet} % ss
+\usepackage{courier} % tt
+\normalfont
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage{amsthm,amssymb,amsbsy,amsmath,amsfonts,amssymb,amscd}
+\usepackage{dsfont}
+\usepackage{tasks}
+\usepackage{enumitem}
+\usepackage[top=2cm, bottom=3cm, left=3cm , right=3cm]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{automata,arrows,positioning,calc}
+\newcommand{\R}{\texttt{R}}
+
+\begin{document}
+\begin{center}
+	\rule{\textwidth}{1pt}
+	\\ \ \\
+	{\LARGE \textbf{TP cours 3 : Optimisation sur base de krigeage}}\\
+	\vspace{3mm}
+	{\large Ecole-chercheur Mexico, La Rochelle \\ \vspace{3mm}}
+	{\normalsize N. Durrande - V. Picheny}\\
+	\vspace{3mm}
+	\rule{\textwidth}{1pt}
+	\vspace{5mm}
+\end{center}
+\paragraph{}
+L'objectif du TP consiste à trouver les paramètres du simulateurs numérique du volcan qui minimisent l'erreur de prédiction par rapport aux données observées par satellite. On s'intéresse donc à un problème de calibration que l'on va traiter comme un problème d'optimisation.
+\paragraph{}
+Ce TP comprend deux parties: pour commencer il faudra obtenir un bon modèle de krigeage qui approxime la fonction \texttt{compute\_wls} (deuxième partie du précédent TP). La seconde partie consiste à utiliser l'algorithme EGO du package \texttt{DiceOptim} pour trouver les paramètres qui minimisent cette erreur.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Modélisation par krigeage}
+
+\paragraph{Q1.} Récupérer le meilleur plan d'expérience de 100 points en dimension 5 obtenu lors de la séance de lundi. 
+Si vous n'êtes pas arrivé à un résultat convainquant vous pouvez utiliser le plan d'expérience et les observations fournies dans le fichier \texttt{XY\_volcano.Rdata} (à charger avec la fonction \texttt{load}).
+
+\paragraph{Q2.} Tester différentes covariances et tendances en estimant les paramètres par maximum de vraisemblance. Les valeurs des paramètres estimés peuvent-elle nous renseigner sur la fonction que l'on approxime ? Proposer une interprétation.
+
+\paragraph{Q3. } Tester la qualité de prédiction de la moyenne de krigeage de différents modèles en calculant le critère 
+$$Q_2 = 1 - \frac{\sum_{i=1}^n (y_i - m(x_i))^2}{\sum_{i=1}^n (y_i - mean(y_i)^2}$$
+sur des résidus obtenus par leave-one-out (cf fonction \texttt{leaveOneOut.km}). Vous avez peut-être constaté précédement qu'ajouter des termes de tendance augmente toujours la vraisemblance du modèle mais est-ce que cela augmente forcément le $Q_2$ ? 
+
+\paragraph{Q4. } Normaliser les résidus obtenus par leave-one-out et utiliser le code qui vous est fourni pour comparer leur distribution à une loi $\mathcal{N}(0, 1)$. Le résultat vous parrait-il satisfaisant ? Choisir le modèle qui vous parrait le meilleur, c'est celui là que l'on utilisera par la suite pour l'optimisation.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Optimisation Globale avec EGO}
+
+\paragraph{Q5. } Charger la package \texttt{DiceOptim} et utiliser la fonction \texttt{EGO.nstep} pour effectuer \texttt{nsteps=20} itérations de l'algorithme EGO. Cette fonction prend en entrée le modèle de krigeage ainsi que la fonction à optimiser \texttt{compute\_wls}. Par la suite, on notera \texttt{res} l'objet qui est retourné par la fonction \texttt{EGO.nsteps}.
+
+\paragraph{Q6. } Tracer l'évolution des valeurs de la fonction objectif aux points visités par EGO en fonction de l'itération. Quel est la plus petite valeur observée et quels sont les paramètres associés ? Y-a-t'il une amélioration par rapport à la meilleure valeur observée sur le plan d'expérience ?
+
+\paragraph{Q7. } Représenter à l'aide d'un graphique \texttt{pairs} la distribution dans l'espace des paramètres testés par l'optimiseur. Identifier des zones d'exploration et d'exploitation.
+
+\paragraph{Q9. } Utiliser la fonction \texttt{sectionview} de \texttt{DiceView} pour représenter une vue en coupe du modèle centrée sur l'optimum.
+
+%\paragraph{Q8 (bonus). } Comparer les résultats obtenus avec une optimisation par descente de gradient avec 120 évaluations de la fonction (et donc 20 itérations puisque, en dimension 5, chaque itération effectue 6 évaluation de la fonction pour évaluer la fonction et son gradient).
+\end{document}
