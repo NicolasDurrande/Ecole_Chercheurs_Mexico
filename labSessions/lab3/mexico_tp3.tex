@@ -43,7 +43,8 @@ La seconde partie consiste à utiliser l'algorithme EGO du package \texttt{DiceO
 \paragraph{Q1.} Récupérer le meilleur plan d'expériences de 100 points en dimension 5 obtenu lors de la séance de lundi. 
 Si vous n'êtes pas arrivé à un résultat convainquant vous pouvez utiliser le plan d'expériences et les observations fournies dans le fichier \texttt{XY\_volcano.Rdata} (à charger avec la fonction \texttt{load}).
 
-\paragraph{Q2.} Tester différentes covariances et tendances en estimant les paramètres par maximum de vraisemblance. Les valeurs des paramètres estimés peuvent-elle nous renseigner sur la fonction que l'on approche ? Proposer une interprétation.
+\paragraph{Q2.} Tester différentes covariances et tendances en estimant les paramètres par maximum de vraisemblance. Les valeurs des paramètres estimés peuvent-elle nous renseigner sur la fonction que l'on approche ? Proposer une interprétation. 
+Si vous observez des portées très faibles, qu'est-ce que cela implique ? Pour éviter ce problème, il est possible d'imposer des bornes lors de l'appel à \texttt{km}, par exemple dans notre cas \texttt{lower=rep(0.1, 5)}.
 
 \paragraph{Q3. } Tester la qualité de prédiction de la moyenne de krigeage de différents modèles en calculant le critère 
 $$Q_2 = 1 - \frac{\sum_{i=1}^n (y_i - m(x_i))^2}{\sum_{i=1}^n (y_i - mean(y_i)^2}$$
