@@ -1,0 +1,3 @@
+New cleaner version of the volcano test case. This is mainly for future use.
+
+No more global variables, strange names, R.matlab or auxiliary functions'compute_wls'. The two functions to call are now 'compute_displacement' and 'compute_wls'.
